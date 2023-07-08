@@ -5,8 +5,12 @@ using ArchitectProg.Persistence.EfCore.PostgreSQL;
 using ArchitectProg.Persistence.EfCore.PostgreSQL.Settings;
 using ArchitectProg.WebApi.Extensions.Filters;
 using ArchitectProg.WebApi.Extensions.Responses;
+using Microservice.Email.Creators;
+using Microservice.Email.Creators.Interfaces;
 using Microservice.Email.Factories;
 using Microservice.Email.Factories.Interfaces;
+using Microservice.Email.Mappers;
+using Microservice.Email.Mappers.Interfaces;
 using Microservice.Email.Persistence;
 using Microservice.Email.Persistence.Extensions;
 using Microservice.Email.Services;
@@ -47,7 +51,10 @@ builder.Services.AddEfCoreRepository();
 builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
 
 builder.Services.AddScoped<IRetryPolicyFactory, RetryPolicyFactory>();
+builder.Services.AddScoped<IAddressFactory, AddressFactory>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IEmailMapper, EmailMapper>();
+builder.Services.AddScoped<IEmailCreator, EmailCreator>();
 
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(RetryPolicySettings)));
