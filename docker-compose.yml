@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - postgres:/var/lib/postgresql/data
 
@@ -19,11 +19,20 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_LISTEN_PORT: 80
     ports:
-      - 5050:80
+      - "5050:80"
     volumes:
       - pgadmin:/var/lib/pgadmin
     depends_on:
       - postgres
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: always
+    logging:
+      driver: 'none'
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
 volumes:
   postgres:

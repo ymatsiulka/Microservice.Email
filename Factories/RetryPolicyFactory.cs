@@ -1,4 +1,5 @@
-﻿using Microservice.Email.Factories.Interfaces;
+﻿using System.Net.Mail;
+using Microservice.Email.Factories.Interfaces;
 using Microservice.Email.Settings;
 using Microsoft.Extensions.Options;
 using Polly;
@@ -22,7 +23,9 @@ public class RetryPolicyFactory : IRetryPolicyFactory
             retrySettings.RetriesCount);
 
         var result = Policy<T>
-            .Handle<HttpRequestException>()
+            .Handle<SmtpException>()
+            .Or<SmtpFailedRecipientException>()
+            .Or<SmtpFailedRecipientsException>()
             .WaitAndRetryAsync(retryDelays);
 
         return result;

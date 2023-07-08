@@ -1,6 +1,7 @@
 ﻿using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.Kernel.Extensions.Utils;
 using FluentEmail.Core;
+using FluentEmail.Core.Models;
 using Microservice.Email.Contracts.Requests;
 using Microservice.Email.Contracts.Responses;
 using Microservice.Email.Creators.Interfaces;
@@ -19,13 +20,15 @@ public sealed class EmailService : IEmailService
     private readonly IRepository<EmailEntity> emailRepository;
     private readonly IEmailMapper emailMapper;
     private readonly IEmailCreator emailCreator;
+    private readonly IRetryPolicyFactory retryPolicyFactory;
 
     public EmailService(IFluentEmailFactory fluentEmailFactory,
         IUnitOfWorkFactory unitOfWorkFactory,
         IAddressFactory addressFactory,
         IRepository<EmailEntity> emailRepository,
         IEmailMapper emailMapper,
-        IEmailCreator emailCreator)
+        IEmailCreator emailCreator,
+        IRetryPolicyFactory retryPolicyFactory)
     {
         this.fluentEmailFactory = fluentEmailFactory;
         this.unitOfWorkFactory = unitOfWorkFactory;
@@ -33,6 +36,7 @@ public sealed class EmailService : IEmailService
         this.emailRepository = emailRepository;
         this.emailMapper = emailMapper;
         this.emailCreator = emailCreator;
+        this.retryPolicyFactory = retryPolicyFactory;
     }
 
     public async Task<Result<EmailResponse>> Send(SendEmailRequest request)
@@ -43,10 +47,12 @@ public sealed class EmailService : IEmailService
 
         var email = fluentEmailFactory.Create()
             .To(recipients)
+            .SetFrom(request.Sender)
             .Subject(request.Subject)
             .Body(request.Body);
 
-        var emailResponse = await email.SendAsync();
+        var policy = retryPolicyFactory.GetPolicy<SendResponse>();
+        var emailResponse = await policy.ExecuteAsync(async () => await email.SendAsync());
 
         //var stringEmailErrorMessages = string.Join(" ", emailResponse.ErrorMessages);
 
