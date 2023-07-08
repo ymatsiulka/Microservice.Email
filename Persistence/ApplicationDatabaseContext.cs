@@ -1,7 +1,6 @@
 ﻿using ArchitectProg.Persistence.EfCore.PostgreSQL.Settings;
 using Microservice.Email.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 

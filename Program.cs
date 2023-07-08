@@ -5,8 +5,11 @@ using ArchitectProg.Persistence.EfCore.PostgreSQL;
 using ArchitectProg.Persistence.EfCore.PostgreSQL.Settings;
 using ArchitectProg.WebApi.Extensions.Filters;
 using ArchitectProg.WebApi.Extensions.Responses;
+using Microservice.Email.Factories;
+using Microservice.Email.Factories.Interfaces;
 using Microservice.Email.Persistence;
 using Microservice.Email.Persistence.Extensions;
+using Microservice.Email.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,7 +43,11 @@ builder.Services.AddKernelExtensions();
 builder.Services.AddFunctionalExtensions();
 builder.Services.AddEfCoreRepository();
 builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
+
+builder.Services.AddScoped<IRetryPolicyFactory, RetryPolicyFactory>();
+
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
+builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(RetryPolicySettings)));
 
 var app = builder.Build();
 
@@ -54,9 +61,10 @@ app.UseCors(policy =>
         .GetSection("AllowedCorsOrigins")
         .Get<string[]>();
 
-    policy.WithOrigins(corsOrigins)
-        .AllowAnyHeader()
-        .AllowAnyMethod();
+    if (corsOrigins is not null)
+        policy.WithOrigins(corsOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
 });
 
 app.UseHttpsRedirection();
