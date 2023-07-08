@@ -51,6 +51,8 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(RetryPolicySettings)));
+builder.Services.AddFluentEmail("youremail@example.com")
+    .AddSmtpSender("localhost", 25);
 
 var app = builder.Build();
 
