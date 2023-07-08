@@ -6,6 +6,6 @@ namespace Microservice.Email.Services.Interfaces
 {
     public interface IEmailService
     {
-        Result<EmailResponse> Send(SendEmailRequest request);
+        Task<Result<EmailResponse>> Send(SendEmailRequest request);
     }
 }

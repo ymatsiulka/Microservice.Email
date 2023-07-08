@@ -9,6 +9,8 @@ using Microservice.Email.Factories;
 using Microservice.Email.Factories.Interfaces;
 using Microservice.Email.Persistence;
 using Microservice.Email.Persistence.Extensions;
+using Microservice.Email.Services;
+using Microservice.Email.Services.Interfaces;
 using Microservice.Email.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +47,7 @@ builder.Services.AddEfCoreRepository();
 builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
 
 builder.Services.AddScoped<IRetryPolicyFactory, RetryPolicyFactory>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(RetryPolicySettings)));

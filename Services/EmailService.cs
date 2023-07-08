@@ -7,7 +7,7 @@ namespace Microservice.Email.Services
 {
     public sealed class EmailService : IEmailService
     {
-        public Result<EmailResponse> Send(SendEmailRequest request)
+        public Task<Result<EmailResponse>> Send(SendEmailRequest request)
         {
 
             return null;
