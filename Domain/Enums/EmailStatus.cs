@@ -1,8 +1,7 @@
-﻿namespace Microservice.Email.Domain.Enums
+﻿namespace Microservice.Email.Domain.Enums;
+
+public enum EmailStatus
 {
-    public enum EmailStatus
-    {
-        Unknown = 0,
-        Sent = 1
-    }
+    Unknown = 0,
+    Sent = 1
 }

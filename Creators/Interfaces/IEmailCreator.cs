@@ -1,10 +1,9 @@
 ﻿using Microservice.Email.Contracts.Requests;
 using Microservice.Email.Domain.Entities;
 
-namespace Microservice.Email.Creators.Interfaces
+namespace Microservice.Email.Creators.Interfaces;
+
+public interface IEmailCreator
 {
-    public interface IEmailCreator
-    {
-        EmailEntity Create(SendEmailRequest request);
-    }
+    EmailEntity Create(SendEmailRequest request);
 }

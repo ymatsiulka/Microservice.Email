@@ -1,9 +1,8 @@
 ﻿using FluentEmail.Core.Models;
 
-namespace Microservice.Email.Factories.Interfaces
+namespace Microservice.Email.Factories.Interfaces;
+
+public interface IAddressFactory
 {
-    public interface IAddressFactory
-    {
-        Address CreateAddress(string address);
-    }
+    Address CreateAddress(string address);
 }
