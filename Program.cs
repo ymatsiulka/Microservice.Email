@@ -1,44 +1,65 @@
-var builder = WebApplication.CreateBuilder(args);
+using ArchitectProg.FunctionalExtensions;
+using ArchitectProg.Kernel.Extensions;
+using ArchitectProg.Kernel.Extensions.Exceptions;
+using ArchitectProg.Persistence.EfCore.PostgreSQL;
+using ArchitectProg.Persistence.EfCore.PostgreSQL.Settings;
+using ArchitectProg.WebApi.Extensions.Filters;
+using ArchitectProg.WebApi.Extensions.Responses;
+using Microservice.Email.Persistence;
+using Microservice.Email.Persistence.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
+
 builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(new BadRequestOnExceptionFilter(typeof(ValidationException)));
+    options.Filters.Add(new NotFoundOnExceptionFilter(typeof(ResourceNotFoundException)));
+})
+.ConfigureApiBehaviorOptions(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var messages = context.ModelState.Values
+            .SelectMany(x => x.Errors)
+            .Select(x => x.ErrorMessage);
+
+        var message = string.Join(" ", messages);
+
+        var response = new ErrorResult(StatusCodes.Status400BadRequest, message);
+        return new BadRequestObjectResult(response);
+    };
+})
+.AddControllersAsServices();
+
+builder.Services.AddKernelExtensions();
+builder.Services.AddFunctionalExtensions();
+builder.Services.AddEfCoreRepository();
+builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
+builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.ApplyMigrations();
+
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseCors(policy =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    var corsOrigins = configuration
+        .GetSection("AllowedCorsOrigins")
+        .Get<string[]>();
+
+    policy.WithOrigins(corsOrigins)
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+});
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
-
+app.MapControllers();
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
