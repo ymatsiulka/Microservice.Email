@@ -39,9 +39,10 @@ namespace Microservice.Email.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("email_status");
 
-                    b.Property<string[]>("Recipients")
+                    b.Property<string>("Recipients")
                         .IsRequired()
-                        .HasColumnType("jsonb")
+                        .HasMaxLength(8000)
+                        .HasColumnType("character varying(8000)")
                         .HasColumnName("recipients");
 
                     b.Property<string>("Sender")

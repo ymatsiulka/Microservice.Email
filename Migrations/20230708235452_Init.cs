@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Microservice.Email.Migrations
 {
     /// <inheritdoc />
-    public partial class Initdatabase : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,7 +21,7 @@ namespace Microservice.Email.Migrations
                     body = table.Column<string>(type: "text", nullable: true),
                     subject = table.Column<string>(type: "text", nullable: false),
                     sender = table.Column<string>(type: "text", nullable: false),
-                    recipients = table.Column<string[]>(type: "jsonb", nullable: false),
+                    recipients = table.Column<string>(type: "character varying(8000)", maxLength: 8000, nullable: false),
                     sent_date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     email_status = table.Column<int>(type: "integer", nullable: false)
                 },

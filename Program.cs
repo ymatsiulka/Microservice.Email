@@ -18,6 +18,8 @@ using Microservice.Email.Services.Interfaces;
 using Microservice.Email.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mail;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;

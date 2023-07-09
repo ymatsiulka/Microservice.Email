@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Microservice.Email.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    [Migration("20230708225615_Init database")]
-    partial class Initdatabase
+    [Migration("20230708235452_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,9 +42,10 @@ namespace Microservice.Email.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("email_status");
 
-                    b.Property<string[]>("Recipients")
+                    b.Property<string>("Recipients")
                         .IsRequired()
-                        .HasColumnType("jsonb")
+                        .HasMaxLength(8000)
+                        .HasColumnType("character varying(8000)")
                         .HasColumnName("recipients");
 
                     b.Property<string>("Sender")
