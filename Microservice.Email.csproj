@@ -7,14 +7,16 @@
     <UserSecretsId>069e55db-4630-41c8-9ccb-c8c591627ee6</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="ArchitectProg.FunctionalExtensions" Version="2.2.7" />
     <PackageReference Include="ArchitectProg.WebApi.Extensions" Version="2.0.3" />
     <PackageReference Include="ArchitectProg.Persistence.EfCore.PostgreSQL" Version="1.0.3" />
+    <PackageReference Include="FluentEmail.Razor" Version="3.0.2" />
     <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.8" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Polly" Version="7.2.4" />
     <PackageReference Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
@@ -27,6 +29,10 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\ExampleModel.cshtml" />
   </ItemGroup>
 
 </Project>

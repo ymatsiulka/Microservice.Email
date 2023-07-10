@@ -18,8 +18,8 @@ using Microservice.Email.Services.Interfaces;
 using Microservice.Email.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Mail;
 using System.Net;
+using System.Net.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -57,12 +57,28 @@ builder.Services.AddScoped<IAddressFactory, AddressFactory>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEmailMapper, EmailMapper>();
 builder.Services.AddScoped<IEmailCreator, EmailCreator>();
-
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(RetryPolicySettings)));
+var smtpSettingsConfiguration = configuration.GetSection(nameof(SmtpSettings));
+builder.Services.Configure<SmtpSettings>(smtpSettingsConfiguration);
+var smtpSettings = smtpSettingsConfiguration.Get<SmtpSettings>() ?? throw new ArgumentNullException(nameof(smtpSettingsConfiguration));
+var smtpClient = new SmtpClient(smtpSettings.Host, smtpSettings.Port)
+{
+    DeliveryMethod = SmtpDeliveryMethod.Network,
+    EnableSsl = smtpSettings.EnableSsl,
+    Credentials = new NetworkCredential(smtpSettings.Username, smtpSettings.Password)
+};
+
+
+//builder.Services
+//    .AddFluentEmail(smtpSettings.Username)
+//    .AddRazorRenderer()
+//    .AddSmtpSender(smtpClient);
+
 builder.Services
-    .AddFluentEmail("admin@local.com")
-    .AddSmtpSender("localhost", 1025);
+   .AddFluentEmail("admin@local.com")
+   .AddRazorRenderer()
+   .AddSmtpSender("localhost", 1025);
 
 var app = builder.Build();
 

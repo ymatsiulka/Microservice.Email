@@ -24,7 +24,7 @@ public sealed class EmailController : ControllerBase
     public async Task<IActionResult> Send(SendEmailRequest request)
     {
         var result = await emailService.Send(request);
-        var response = result.MatchActionResult(x => Ok(x));
+        var response = result.MatchActionResult(Ok);
         return response;
     }
 }

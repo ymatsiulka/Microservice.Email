@@ -9,12 +9,13 @@ using Microservice.Email.Domain.Entities;
 using Microservice.Email.Factories.Interfaces;
 using Microservice.Email.Mappers.Interfaces;
 using Microservice.Email.Services.Interfaces;
+using System.Reflection;
 
 namespace Microservice.Email.Services;
 
 public sealed class EmailService : IEmailService
 {
-    private readonly IFluentEmailFactory fluentEmailFactory;
+    private readonly IFluentEmail fluentEmail;
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
     private readonly IAddressFactory addressFactory;
     private readonly IRepository<EmailEntity> emailRepository;
@@ -22,7 +23,8 @@ public sealed class EmailService : IEmailService
     private readonly IEmailCreator emailCreator;
     private readonly IRetryPolicyFactory retryPolicyFactory;
 
-    public EmailService(IFluentEmailFactory fluentEmailFactory,
+    public EmailService(
+        IFluentEmail fluentEmail,
         IUnitOfWorkFactory unitOfWorkFactory,
         IAddressFactory addressFactory,
         IRepository<EmailEntity> emailRepository,
@@ -30,7 +32,7 @@ public sealed class EmailService : IEmailService
         IEmailCreator emailCreator,
         IRetryPolicyFactory retryPolicyFactory)
     {
-        this.fluentEmailFactory = fluentEmailFactory;
+        this.fluentEmail = fluentEmail;
         this.unitOfWorkFactory = unitOfWorkFactory;
         this.addressFactory = addressFactory;
         this.emailRepository = emailRepository;
@@ -45,11 +47,13 @@ public sealed class EmailService : IEmailService
             .Select(addressFactory.CreateAddress)
             .ToArray();
 
-        var email = fluentEmailFactory.Create()
-            .To(recipients)
-            .SetFrom(request.Sender)
+        var assembly = Assembly.GetExecutingAssembly();
+
+        var email = fluentEmail
             .Subject(request.Subject)
-            .Body(request.Body);
+            .Body(request.Body)
+            .To(recipients)
+            //.UsingTemplateFromEmbedded("Microservice.Email.Templates.ExampleModel.cshtml", new { UserName = "John Doe" }, assembly);
 
         var policy = retryPolicyFactory.GetPolicy<SendResponse>();
         var emailResponse = await policy.ExecuteAsync(async () => await email.SendAsync());
