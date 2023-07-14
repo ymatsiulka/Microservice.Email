@@ -1,10 +1,12 @@
 ﻿using System.Reflection;
+using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
 using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.Kernel.Extensions.Utils;
 using FluentEmail.Core;
 using FluentEmail.Core.Models;
 using Microservice.Email.Contracts.Requests;
 using Microservice.Email.Contracts.Responses;
+using Microservice.Email.Core.Exceptions;
 using Microservice.Email.Core.Factories.Interfaces;
 using Microservice.Email.Core.Mappers.Interfaces;
 using Microservice.Email.Core.Services.Interfaces;
@@ -15,6 +17,7 @@ namespace Microservice.Email.Core.Services
     public sealed class EmailService : IEmailService
     {
         private readonly IFluentEmail fluentEmail;
+        private readonly IResultFactory resultFactory;
         private readonly IUnitOfWorkFactory unitOfWorkFactory;
         private readonly IAddressFactory addressFactory;
         private readonly IRepository<EmailEntity> emailRepository;
@@ -24,6 +27,7 @@ namespace Microservice.Email.Core.Services
 
         public EmailService(
             IFluentEmail fluentEmail,
+            IResultFactory resultFactory,
             IUnitOfWorkFactory unitOfWorkFactory,
             IAddressFactory addressFactory,
             IRepository<EmailEntity> emailRepository,
@@ -32,6 +36,7 @@ namespace Microservice.Email.Core.Services
             IRetryPolicyFactory retryPolicyFactory)
         {
             this.fluentEmail = fluentEmail;
+            this.resultFactory = resultFactory;
             this.unitOfWorkFactory = unitOfWorkFactory;
             this.addressFactory = addressFactory;
             this.emailRepository = emailRepository;
@@ -46,21 +51,22 @@ namespace Microservice.Email.Core.Services
                 .Select(addressFactory.CreateAddress)
                 .ToArray();
 
-            var assembly = Assembly.GetExecutingAssembly();
-
             var email = fluentEmail
+                .SetFrom(request.Sender.Email, request.Sender.Name)
+                .To(recipients)
                 .Subject(request.Subject)
-                .Body(request.Body)
-                .To(recipients);
-            //.UsingTemplateFromEmbedded("Microservice.Email.Templates.ExampleModel.cshtml", new { UserName = "John Doe" }, assembly);
+                .Body(request.Body);
 
             var policy = retryPolicyFactory.GetPolicy<SendResponse>();
             var emailResponse = await policy.ExecuteAsync(async () => await email.SendAsync());
 
-            //var stringEmailErrorMessages = string.Join(" ", emailResponse.ErrorMessages);
+            if (!emailResponse.Successful)
+            {
+                var errorMessage = string.Join(" ", emailResponse.ErrorMessages);
+                return resultFactory.Failure<EmailResponse>(new EmailSendException(errorMessage));
+            }
 
             var emailEntity = emailFactory.Create(request);
-
             using (var transaction = unitOfWorkFactory.BeginTransaction())
             {
                 await emailRepository.Add(emailEntity);
@@ -74,6 +80,10 @@ namespace Microservice.Email.Core.Services
 
         public Task<Result<EmailResponse>> SendTemplated(SendTemplatedEmailRequest request)
         {
+
+            var assembly = Assembly.GetExecutingAssembly();
+            //.UsingTemplateFromEmbedded("Microservice.Email.Templates.ExampleModel.cshtml", new { UserName = "John Doe" }, assembly);
+
             throw new NotImplementedException();
         }
     }

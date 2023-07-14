@@ -1,6 +1,7 @@
 ﻿using ArchitectProg.Kernel.Extensions.Exceptions;
 using ArchitectProg.Kernel.Extensions.Utils;
 using ArchitectProg.WebApi.Extensions.Responses;
+using Microservice.Email.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Microservice.Email.Extensions;
@@ -34,6 +35,12 @@ public static class ResultExtensions
             case UnauthorizedException:
                 var unauthorizedError = new ErrorResult(StatusCodes.Status401Unauthorized, exception.Message);
                 return new UnauthorizedObjectResult(unauthorizedError);
+            case EmailSendException:
+                var serviceUnavailableError = new ErrorResult(StatusCodes.Status503ServiceUnavailable, exception.Message);
+                return new ObjectResult(serviceUnavailableError)
+                {
+                    StatusCode = StatusCodes.Status503ServiceUnavailable
+                };
             default:
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
