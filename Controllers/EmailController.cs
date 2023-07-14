@@ -21,7 +21,7 @@ namespace Microservice.Email.Controllers
         [ProducesBadRequest]
         [ProducesOk(typeof(EmailResponse))]
         [HttpPost("send")]
-        public async Task<IActionResult> Send(SendEmailRequest request)
+        public async Task<IActionResult> Send([FromForm]SendEmailRequest request)
         {
             var result = await emailService.Send(request);
             var response = result.MatchActionResult(Ok);

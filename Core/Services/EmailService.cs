@@ -46,6 +46,19 @@ namespace Microservice.Email.Core.Services
         public async Task<Result<EmailResponse>> Send(SendEmailRequest request)
         {
             var email = fluentEmailFactory.GetEmail(request);
+            foreach (var formFile in request.FormFiles ?? new FormFileCollection())
+            {
+                var attachment = new Attachment
+                {
+                    ContentType = formFile.ContentType,
+                    Data = formFile.OpenReadStream(),
+                    Filename = formFile.FileName,
+                    ContentId = Guid.NewGuid().ToString(),
+                    IsInline = true
+                };
+
+                email.Attach(attachment);
+            }
 
             var policy = retryPolicyFactory.GetPolicy<SendResponse>();
             var emailResponse = await policy.ExecuteAsync(async () => await email.SendAsync());
