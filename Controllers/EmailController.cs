@@ -1,30 +1,41 @@
 ﻿using ArchitectProg.WebApi.Extensions.Attributes;
 using Microservice.Email.Contracts.Requests;
 using Microservice.Email.Contracts.Responses;
+using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Extensions;
-using Microservice.Email.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Microservice.Email.Controllers;
-
-[ApiController]
-[Route("api/email")]
-public sealed class EmailController : ControllerBase
+namespace Microservice.Email.Controllers
 {
-    private readonly IEmailService emailService;
-
-    public EmailController(IEmailService emailService)
+    [ApiController]
+    [Route("api/email")]
+    public sealed class EmailController : ControllerBase
     {
-        this.emailService = emailService;
-    }
+        private readonly IEmailService emailService;
 
-    [ProducesBadRequest]
-    [ProducesOk(typeof(EmailResponse))]
-    [HttpPost("send")]
-    public async Task<IActionResult> Send(SendEmailRequest request)
-    {
-        var result = await emailService.Send(request);
-        var response = result.MatchActionResult(Ok);
-        return response;
+        public EmailController(IEmailService emailService)
+        {
+            this.emailService = emailService;
+        }
+
+        [ProducesBadRequest]
+        [ProducesOk(typeof(EmailResponse))]
+        [HttpPost("send")]
+        public async Task<IActionResult> Send(SendEmailRequest request)
+        {
+            var result = await emailService.Send(request);
+            var response = result.MatchActionResult(Ok);
+            return response;
+        }
+
+        [ProducesBadRequest]
+        [ProducesOk(typeof(EmailResponse))]
+        [HttpPost("templated/send")]
+        public async Task<IActionResult> SendTemplatedEmail(SendEmailRequest request)
+        {
+            var result = await emailService.Send(request);
+            var response = result.MatchActionResult(Ok);
+            return response;
+        }
     }
 }

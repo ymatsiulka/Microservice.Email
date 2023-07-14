@@ -1,8 +1,8 @@
 ﻿using ArchitectProg.FunctionalExtensions.Extensions;
 using FluentEmail.Core.Models;
-using Microservice.Email.Factories.Interfaces;
+using Microservice.Email.Core.Factories.Interfaces;
 
-namespace Microservice.Email.Factories;
+namespace Microservice.Email.Core.Factories;
 
 public sealed class AddressFactory : IAddressFactory
 {

@@ -1,9 +1,7 @@
 ﻿using Microservice.Email.Domain.Entities;
 using Microservice.Email.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Newtonsoft.Json;
 
 namespace Microservice.Email.Persistence.Configuration;
 

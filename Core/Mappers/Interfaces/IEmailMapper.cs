@@ -2,8 +2,9 @@
 using Microservice.Email.Contracts.Responses;
 using Microservice.Email.Domain.Entities;
 
-namespace Microservice.Email.Mappers.Interfaces;
-
-public interface IEmailMapper : IMapper<EmailEntity, EmailResponse>
+namespace Microservice.Email.Core.Mappers.Interfaces
 {
+    public interface IEmailMapper : IMapper<EmailEntity, EmailResponse>
+    {
+    }
 }

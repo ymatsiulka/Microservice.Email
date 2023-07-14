@@ -5,21 +5,21 @@ using ArchitectProg.Persistence.EfCore.PostgreSQL;
 using ArchitectProg.Persistence.EfCore.PostgreSQL.Settings;
 using ArchitectProg.WebApi.Extensions.Filters;
 using ArchitectProg.WebApi.Extensions.Responses;
-using Microservice.Email.Creators;
-using Microservice.Email.Creators.Interfaces;
 using Microservice.Email.Extensions;
-using Microservice.Email.Factories;
-using Microservice.Email.Factories.Interfaces;
-using Microservice.Email.Mappers;
-using Microservice.Email.Mappers.Interfaces;
 using Microservice.Email.Persistence;
-using Microservice.Email.Services;
-using Microservice.Email.Services.Interfaces;
-using Microservice.Email.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
-using System.Net.Mail;
+using FluentEmail.Core.Interfaces;
+using FluentEmail.Smtp;
+using Microservice.Email.Core.Factories;
+using Microservice.Email.Core.Factories.Interfaces;
+using Microservice.Email.Core.Mappers;
+using Microservice.Email.Core.Mappers.Interfaces;
+using Microservice.Email.Core.Services;
+using Microservice.Email.Core.Services.Interfaces;
+using Microservice.Email.Core.Settings;
+using Microservice.Email.Smtp;
+using Microservice.Email.Smtp.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -52,33 +52,27 @@ builder.Services.AddFunctionalExtensions();
 builder.Services.AddEfCoreRepository();
 builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
 
+builder.Services.AddScoped<ISmtpClientProvider, SmtpClientProvider>();
 builder.Services.AddScoped<IRetryPolicyFactory, RetryPolicyFactory>();
 builder.Services.AddScoped<IAddressFactory, AddressFactory>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEmailMapper, EmailMapper>();
-builder.Services.AddScoped<IEmailCreator, EmailCreator>();
+builder.Services.AddScoped<IEmailFactory, EmailFactory>();
+
+builder.Services.AddScoped<ISender>(x =>
+{
+    var smtpClientProvider = x.GetRequiredService<ISmtpClientProvider>();
+    var result = new SmtpSender(smtpClientProvider.SmtpClient);
+    return result;
+});
+
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(RetryPolicySettings)));
-var smtpSettingsConfiguration = configuration.GetSection(nameof(SmtpSettings));
-builder.Services.Configure<SmtpSettings>(smtpSettingsConfiguration);
-var smtpSettings = smtpSettingsConfiguration.Get<SmtpSettings>() ?? throw new ArgumentNullException(nameof(smtpSettingsConfiguration));
-var smtpClient = new SmtpClient(smtpSettings.Host, smtpSettings.Port)
-{
-    DeliveryMethod = SmtpDeliveryMethod.Network,
-    EnableSsl = smtpSettings.EnableSsl,
-    Credentials = new NetworkCredential(smtpSettings.Username, smtpSettings.Password)
-};
-
-
-//builder.Services
-//    .AddFluentEmail(smtpSettings.Username)
-//    .AddRazorRenderer()
-//    .AddSmtpSender(smtpClient);
+builder.Services.Configure<SmtpSettings>(configuration.GetSection(nameof(SmtpSettings)));
 
 builder.Services
-   .AddFluentEmail("admin@local.com")
-   .AddRazorRenderer()
-   .AddSmtpSender("localhost", 1025);
+    .AddFluentEmail("default_sender@admin.com")
+    .AddRazorRenderer();
 
 var app = builder.Build();
 
