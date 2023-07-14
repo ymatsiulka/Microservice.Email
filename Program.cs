@@ -58,6 +58,7 @@ builder.Services.AddScoped<IAddressFactory, AddressFactory>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEmailMapper, EmailMapper>();
 builder.Services.AddScoped<IEmailFactory, EmailFactory>();
+builder.Services.AddScoped<IFluentEmailFactory, FluentEmailFactory>();
 
 builder.Services.AddScoped<ISender>(x =>
 {

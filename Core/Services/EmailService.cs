@@ -11,34 +11,32 @@ using Microservice.Email.Core.Factories.Interfaces;
 using Microservice.Email.Core.Mappers.Interfaces;
 using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Domain.Entities;
+using IFluentEmailFactory = Microservice.Email.Core.Factories.Interfaces.IFluentEmailFactory;
 
 namespace Microservice.Email.Core.Services
 {
     public sealed class EmailService : IEmailService
     {
-        private readonly IFluentEmail fluentEmail;
+        private readonly IFluentEmailFactory fluentEmailFactory;
         private readonly IResultFactory resultFactory;
         private readonly IUnitOfWorkFactory unitOfWorkFactory;
-        private readonly IAddressFactory addressFactory;
         private readonly IRepository<EmailEntity> emailRepository;
         private readonly IEmailMapper emailMapper;
         private readonly IEmailFactory emailFactory;
         private readonly IRetryPolicyFactory retryPolicyFactory;
 
         public EmailService(
-            IFluentEmail fluentEmail,
+            IFluentEmailFactory fluentEmailFactory,
             IResultFactory resultFactory,
             IUnitOfWorkFactory unitOfWorkFactory,
-            IAddressFactory addressFactory,
             IRepository<EmailEntity> emailRepository,
             IEmailMapper emailMapper,
             IEmailFactory emailFactory,
             IRetryPolicyFactory retryPolicyFactory)
         {
-            this.fluentEmail = fluentEmail;
+            this.fluentEmailFactory = fluentEmailFactory;
             this.resultFactory = resultFactory;
             this.unitOfWorkFactory = unitOfWorkFactory;
-            this.addressFactory = addressFactory;
             this.emailRepository = emailRepository;
             this.emailMapper = emailMapper;
             this.emailFactory = emailFactory;
@@ -47,15 +45,7 @@ namespace Microservice.Email.Core.Services
 
         public async Task<Result<EmailResponse>> Send(SendEmailRequest request)
         {
-            var recipients = request.Recipients
-                .Select(addressFactory.CreateAddress)
-                .ToArray();
-
-            var email = fluentEmail
-                .SetFrom(request.Sender.Email, request.Sender.Name)
-                .To(recipients)
-                .Subject(request.Subject)
-                .Body(request.Body);
+            var email = fluentEmailFactory.GetEmail(request);
 
             var policy = retryPolicyFactory.GetPolicy<SendResponse>();
             var emailResponse = await policy.ExecuteAsync(async () => await email.SendAsync());
@@ -80,7 +70,6 @@ namespace Microservice.Email.Core.Services
 
         public Task<Result<EmailResponse>> SendTemplated(SendTemplatedEmailRequest request)
         {
-
             var assembly = Assembly.GetExecutingAssembly();
             //.UsingTemplateFromEmbedded("Microservice.Email.Templates.ExampleModel.cshtml", new { UserName = "John Doe" }, assembly);
 

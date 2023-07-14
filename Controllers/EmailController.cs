@@ -31,9 +31,9 @@ namespace Microservice.Email.Controllers
         [ProducesBadRequest]
         [ProducesOk(typeof(EmailResponse))]
         [HttpPost("templated/send")]
-        public async Task<IActionResult> SendTemplatedEmail(SendEmailRequest request)
+        public async Task<IActionResult> SendTemplatedEmail(SendTemplatedEmailRequest request)
         {
-            var result = await emailService.Send(request);
+            var result = await emailService.SendTemplated(request);
             var response = result.MatchActionResult(Ok);
             return response;
         }
