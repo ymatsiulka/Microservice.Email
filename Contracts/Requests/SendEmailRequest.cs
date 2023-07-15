@@ -1,5 +1,4 @@
 ﻿using Microservice.Email.Contracts.Common;
-using Newtonsoft.Json;
 
 namespace Microservice.Email.Contracts.Requests;
 

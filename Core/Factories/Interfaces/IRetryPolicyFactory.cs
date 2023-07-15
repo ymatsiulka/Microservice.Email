@@ -1,9 +1,8 @@
 ﻿using Polly;
 
-namespace Microservice.Email.Core.Factories.Interfaces
+namespace Microservice.Email.Core.Factories.Interfaces;
+
+public interface IRetryPolicyFactory
 {
-    public interface IRetryPolicyFactory
-    {
-        IAsyncPolicy<T> GetPolicy<T>();
-    }
+    IAsyncPolicy<T> GetPolicy<T>();
 }

@@ -1,9 +1,8 @@
 ﻿using FluentEmail.Core.Models;
 
-namespace Microservice.Email.Core.Factories.Interfaces
+namespace Microservice.Email.Core.Factories.Interfaces;
+
+public interface IAttachmentFactory
 {
-    public interface IAttachmentFactory
-    {
-        Attachment Create(IFormFile formFile);
-    }
+    Attachment Create(IFormFile formFile);
 }

@@ -1,8 +1,7 @@
-﻿namespace Microservice.Email.Core.Settings
+﻿namespace Microservice.Email.Core.Settings;
+
+public class RetryPolicySettings
 {
-    public class RetryPolicySettings
-    {
-        public required int RetriesCount { get; init; }
-        public required int MedianRetryDelay { get; init; }
-    }
+    public required int RetriesCount { get; init; }
+    public required int MedianRetryDelay { get; init; }
 }

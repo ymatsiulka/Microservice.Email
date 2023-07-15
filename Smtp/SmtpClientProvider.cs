@@ -1,48 +1,47 @@
-﻿using System.Net;
-using System.Net.Mail;
-using ArchitectProg.FunctionalExtensions.Extensions;
+﻿using ArchitectProg.FunctionalExtensions.Extensions;
 using Microservice.Email.Smtp.Interfaces;
 using Microsoft.Extensions.Options;
+using System.Net;
+using System.Net.Mail;
 
-namespace Microservice.Email.Smtp
+namespace Microservice.Email.Smtp;
+
+public sealed class SmtpClientProvider : ISmtpClientProvider
 {
-    public sealed class SmtpClientProvider : ISmtpClientProvider
+    private readonly SmtpSettings smtpSettings;
+    private readonly Lazy<SmtpClient> smtpClient;
+
+    public SmtpClient SmtpClient => smtpClient.Value;
+
+    public SmtpClientProvider(IOptions<SmtpSettings> smtpSettings)
     {
-        private readonly SmtpSettings smtpSettings;
-        private readonly Lazy<SmtpClient> smtpClient;
+        this.smtpSettings = smtpSettings.Value;
+        smtpClient = new Lazy<SmtpClient>(GetSmtpClient);
+    }
 
-        public SmtpClient SmtpClient => smtpClient.Value;
+    private SmtpClient GetSmtpClient()
+    {
+        var hasCredentials = !smtpSettings.Username.IsNullOrWhiteSpace() && !smtpSettings.Password.IsNullOrWhiteSpace();
+        var credentials = hasCredentials
+            ? new NetworkCredential(smtpSettings.Username, smtpSettings.Password)
+            : null;
 
-        public SmtpClientProvider(IOptions<SmtpSettings> smtpSettings)
+        var result = new SmtpClient
         {
-            this.smtpSettings = smtpSettings.Value;
-            smtpClient = new Lazy<SmtpClient>(GetSmtpClient);
-        }
+            Host = smtpSettings.Host,
+            Port = smtpSettings.Port,
+            DeliveryMethod = SmtpDeliveryMethod.Network,
+            EnableSsl = smtpSettings.EnableSsl,
+            UseDefaultCredentials = smtpSettings.UseDefaultCredentials,
+            Credentials = credentials
+        };
 
-        private SmtpClient GetSmtpClient()
-        {
-            var hasCredentials = !smtpSettings.Username.IsNullOrWhiteSpace() && !smtpSettings.Password.IsNullOrWhiteSpace();
-            var credentials = hasCredentials
-                ? new NetworkCredential(smtpSettings.Username, smtpSettings.Password)
-                : null;
+        return result;
+    }
 
-            var result = new SmtpClient
-            {
-                Host = smtpSettings.Host,
-                Port = smtpSettings.Port,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                EnableSsl = smtpSettings.EnableSsl,
-                UseDefaultCredentials = smtpSettings.UseDefaultCredentials,
-                Credentials = credentials
-            };
-
-            return result;
-        }
-
-        public void Dispose()
-        {
-            if(smtpClient.IsValueCreated)
-                SmtpClient.Dispose();
-        }
+    public void Dispose()
+    {
+        if (smtpClient.IsValueCreated)
+            SmtpClient.Dispose();
     }
 }

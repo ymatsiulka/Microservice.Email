@@ -26,9 +26,4 @@
   <ItemGroup>
     <Content Remove="Wiki\**" />
   </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Templates\ExampleModel.cshtml" />
-  </ItemGroup>
-
 </Project>

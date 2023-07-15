@@ -7,9 +7,6 @@ namespace Microservice.Email.Persistence.Configuration;
 
 public sealed class EmailEntityTypeConfiguration : IEntityTypeConfiguration<EmailEntity>
 {
-
-
-
     public void Configure(EntityTypeBuilder<EmailEntity> builder)
     {
         builder.ToTable("Email");
@@ -18,6 +15,4 @@ public sealed class EmailEntityTypeConfiguration : IEntityTypeConfiguration<Emai
             .HasMaxLength(8000)
             .SetPropertyConverterAndComparer();
     }
-
-
 }

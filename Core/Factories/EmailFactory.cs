@@ -6,33 +6,32 @@ using Microservice.Email.Domain.Enums;
 using Microservice.Email.Smtp;
 using Microsoft.Extensions.Options;
 
-namespace Microservice.Email.Core.Factories
+namespace Microservice.Email.Core.Factories;
+
+public sealed class EmailFactory : IEmailFactory
 {
-    public class EmailFactory : IEmailFactory
+    private readonly IDateTimeProvider dateTimeProvider;
+    private readonly SmtpSettings smtpSettings;
+
+    public EmailFactory(IDateTimeProvider dateTimeProvider,
+        IOptions<SmtpSettings> smtpSettings)
     {
-        private readonly IDateTimeProvider dateTimeProvider;
-        private readonly SmtpSettings smtpSettings;
+        this.dateTimeProvider = dateTimeProvider;
+        this.smtpSettings = smtpSettings.Value;
+    }
 
-        public EmailFactory(IDateTimeProvider dateTimeProvider,
-            IOptions<SmtpSettings> smtpSettings)
+    public EmailEntity Create(SendEmailRequest request)
+    {
+        var result = new EmailEntity
         {
-            this.dateTimeProvider = dateTimeProvider;
-            this.smtpSettings = smtpSettings.Value;
-        }
+            EmailStatus = EmailStatus.Sent,
+            Recipients = request.Recipients,
+            Subject = request.Subject,
+            Sender = smtpSettings.Username ?? string.Empty,
+            Body = request.Body,
+            SentDate = dateTimeProvider.GetUtcNow(),
+        };
 
-        public EmailEntity Create(SendEmailRequest request)
-        {
-            var result = new EmailEntity
-            {
-                EmailStatus = EmailStatus.Sent,
-                Recipients = request.Recipients,
-                Subject = request.Subject,
-                Sender = smtpSettings.Username ?? string.Empty,
-                Body = request.Body,
-                SentDate = dateTimeProvider.GetUtcNow(),
-            };
-
-            return result;
-        }
+        return result;
     }
 }
