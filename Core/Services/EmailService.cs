@@ -1,8 +1,6 @@
-﻿using System.Reflection;
-using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
+﻿using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
 using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.Kernel.Extensions.Utils;
-using FluentEmail.Core;
 using FluentEmail.Core.Models;
 using Microservice.Email.Contracts.Requests;
 using Microservice.Email.Contracts.Responses;
@@ -11,6 +9,7 @@ using Microservice.Email.Core.Factories.Interfaces;
 using Microservice.Email.Core.Mappers.Interfaces;
 using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Domain.Entities;
+using System.Reflection;
 using IFluentEmailFactory = Microservice.Email.Core.Factories.Interfaces.IFluentEmailFactory;
 
 namespace Microservice.Email.Core.Services
@@ -18,6 +17,7 @@ namespace Microservice.Email.Core.Services
     public sealed class EmailService : IEmailService
     {
         private readonly IFluentEmailFactory fluentEmailFactory;
+        private readonly IAttachmentFactory attachmentFactory;
         private readonly IResultFactory resultFactory;
         private readonly IUnitOfWorkFactory unitOfWorkFactory;
         private readonly IRepository<EmailEntity> emailRepository;
@@ -27,6 +27,7 @@ namespace Microservice.Email.Core.Services
 
         public EmailService(
             IFluentEmailFactory fluentEmailFactory,
+            IAttachmentFactory attachmentFactory,
             IResultFactory resultFactory,
             IUnitOfWorkFactory unitOfWorkFactory,
             IRepository<EmailEntity> emailRepository,
@@ -35,6 +36,7 @@ namespace Microservice.Email.Core.Services
             IRetryPolicyFactory retryPolicyFactory)
         {
             this.fluentEmailFactory = fluentEmailFactory;
+            this.attachmentFactory = attachmentFactory;
             this.resultFactory = resultFactory;
             this.unitOfWorkFactory = unitOfWorkFactory;
             this.emailRepository = emailRepository;
@@ -46,19 +48,8 @@ namespace Microservice.Email.Core.Services
         public async Task<Result<EmailResponse>> Send(SendEmailRequest request)
         {
             var email = fluentEmailFactory.GetEmail(request);
-            foreach (var formFile in request.FormFiles ?? new FormFileCollection())
-            {
-                var attachment = new Attachment
-                {
-                    ContentType = formFile.ContentType,
-                    Data = formFile.OpenReadStream(),
-                    Filename = formFile.FileName,
-                    ContentId = Guid.NewGuid().ToString(),
-                    IsInline = true
-                };
-
-                email.Attach(attachment);
-            }
+            var attachments = request.Attachments?.Select(attachmentFactory.Create).ToList() ?? new List<Attachment>();
+            email.Attach(attachments);
 
             var policy = retryPolicyFactory.GetPolicy<SendResponse>();
             var emailResponse = await policy.ExecuteAsync(async () => await email.SendAsync());

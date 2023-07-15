@@ -5,10 +5,6 @@ using ArchitectProg.Persistence.EfCore.PostgreSQL;
 using ArchitectProg.Persistence.EfCore.PostgreSQL.Settings;
 using ArchitectProg.WebApi.Extensions.Filters;
 using ArchitectProg.WebApi.Extensions.Responses;
-using Microservice.Email.Extensions;
-using Microservice.Email.Persistence;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using FluentEmail.Core.Interfaces;
 using FluentEmail.Smtp;
 using Microservice.Email.Core.Factories;
@@ -18,8 +14,12 @@ using Microservice.Email.Core.Mappers.Interfaces;
 using Microservice.Email.Core.Services;
 using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Core.Settings;
+using Microservice.Email.Extensions;
+using Microservice.Email.Persistence;
 using Microservice.Email.Smtp;
 using Microservice.Email.Smtp.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -59,6 +59,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEmailMapper, EmailMapper>();
 builder.Services.AddScoped<IEmailFactory, EmailFactory>();
 builder.Services.AddScoped<IFluentEmailFactory, FluentEmailFactory>();
+builder.Services.AddScoped<IAttachmentFactory, AttachmentFactory>();
 
 builder.Services.AddScoped<ISender>(x =>
 {
