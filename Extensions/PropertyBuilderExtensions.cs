@@ -29,15 +29,19 @@ public static class PropertyBuilderExtensions
             v => JsonConvert.SerializeObject(v),
             v => JsonConvert.DeserializeObject<T>(v)
         );
+
         return converter;
     }
 
-    private static ValueComparer<T> CreateValueComparer<T>()
+    private static ValueComparer<T?> CreateValueComparer<T>()
     {
-        var comparer = new ValueComparer<T>(
-        (l, r) => JsonConvert.SerializeObject(l) == JsonConvert.SerializeObject(r),
-        v => v != null ? JsonConvert.SerializeObject(v).GetHashCode(StringComparison.Ordinal) : 0,
-        v => JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(v)));
+        var comparer = new ValueComparer<T?>
+        (
+            (l, r) => JsonConvert.SerializeObject(l) == JsonConvert.SerializeObject(r),
+            v => v != null ? JsonConvert.SerializeObject(v).GetHashCode(StringComparison.Ordinal) : 0,
+            v => JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(v))
+        );
+
         return comparer;
     }
 }
