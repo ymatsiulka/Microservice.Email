@@ -1,37 +1,43 @@
-﻿using ArchitectProg.FunctionalExtensions.Services.Interfaces;
+﻿using FluentEmail.Core;
 using Microservice.Email.Contracts.Requests;
 using Microservice.Email.Core.Factories.Interfaces;
-using Microservice.Email.Domain.Entities;
-using Microservice.Email.Domain.Enums;
-using Microservice.Email.Smtp;
-using Microsoft.Extensions.Options;
 
 namespace Microservice.Email.Core.Factories;
 
-public sealed class EmailFactory : IEmailFactory
+public class EmailFactory : IEmailFactory
 {
-    private readonly IDateTimeProvider dateTimeProvider;
-    private readonly SmtpSettings smtpSettings;
+    private readonly IAttachmentFactory attachmentFactory;
+    private readonly IAddressFactory addressFactory;
+    private readonly IFluentEmail fluentEmail;
 
-    public EmailFactory(IDateTimeProvider dateTimeProvider,
-        IOptions<SmtpSettings> smtpSettings)
+    public EmailFactory(
+        IAttachmentFactory attachmentFactory,
+        IAddressFactory addressFactory,
+        IFluentEmail fluentEmail)
     {
-        this.dateTimeProvider = dateTimeProvider;
-        this.smtpSettings = smtpSettings.Value;
+        this.attachmentFactory = attachmentFactory;
+        this.addressFactory = addressFactory;
+        this.fluentEmail = fluentEmail;
     }
 
-    public EmailEntity Create(SendEmailRequest request)
+    public IFluentEmail GetEmail(SendEmailRequest request)
     {
-        var result = new EmailEntity
-        {
-            EmailStatus = EmailStatus.Sent,
-            Recipients = request.Recipients,
-            Subject = request.Subject,
-            Sender = smtpSettings.Username ?? string.Empty,
-            Body = request.Body,
-            SentDate = dateTimeProvider.GetUtcNow(),
-        };
+        var recipients = addressFactory.Create(request.Recipients);
 
-        return result;
+        var email = fluentEmail
+            .To(recipients)
+            .Subject(request.Subject)
+            .Body(request.Body, isHtml: true);
+
+        if (request.Sender is not null)
+            email.SetFrom(request.Sender.Email, request.Sender.Name);
+
+        if (request.Attachments is not null)
+        {
+            var attachments = attachmentFactory.Create(request.Attachments);
+            email.Attach(attachments);
+        }
+
+        return email;
     }
 }

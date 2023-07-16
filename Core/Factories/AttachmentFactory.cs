@@ -5,16 +5,25 @@ namespace Microservice.Email.Core.Factories;
 
 public sealed class AttachmentFactory : IAttachmentFactory
 {
-    public Attachment Create(IFormFile formFile)
+    public Attachment Create(IFormFile attachment)
     {
         var result = new Attachment
         {
-            ContentType = formFile.ContentType,
-            Data = formFile.OpenReadStream(),
-            Filename = formFile.FileName,
+            ContentType = attachment.ContentType,
+            Filename = attachment.FileName,
+            Data = attachment.OpenReadStream(),
             ContentId = Guid.NewGuid().ToString(),
             IsInline = true
         };
+
+        return result;
+    }
+
+    public Attachment[] Create(IFormFileCollection attachments)
+    {
+        var result = attachments
+            .Select(Create)
+            .ToArray();
 
         return result;
     }

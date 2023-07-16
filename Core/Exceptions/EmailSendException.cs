@@ -1,16 +1,16 @@
-﻿namespace Microservice.Email.Core.Exceptions;
+﻿using ArchitectProg.FunctionalExtensions.Constants;
+
+namespace Microservice.Email.Core.Exceptions;
 
 public class EmailSendException : Exception
 {
-    public EmailSendException()
+    public EmailSendException(IEnumerable<string> errorMessages)
+        : base(string.Join(GenericConstants.Space, errorMessages))
     {
     }
 
-    public EmailSendException(string message) : base(message)
-    {
-    }
-
-    public EmailSendException(string message, Exception inner) : base(message, inner)
+    public EmailSendException(IEnumerable<string> errorMessages, Exception inner)
+        : base(string.Join(GenericConstants.Space, errorMessages), inner)
     {
     }
 }

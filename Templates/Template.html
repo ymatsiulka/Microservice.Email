@@ -1,27 +1,30 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Welcome Email</title>
-</head>
-<body>
-<ul>
-    Dear {{ model.name }},
+    <head>
+        <title>Spendings</title>
+    </head>
+    <body>
+        <ul>
+            Dear {{ model.name }},
 
-    Your order, {{model.orderId}}, is now ready to be collected.
+            Your order, {{ model.orderId }}, is now ready to be collected.
 
-    Your order shall be delivered to {{ model.address }}.  If you need it delivered to another location, please contact as ASAP.
+            Your order shall be delivered to {{ model.address }}. If you need it delivered to another location, please
+            contact as ASAP.
 
-    Order: {{ model.orderId}}
-    Total: {{ model.total | math.format "c" "en-US" }}
+            Order: {{ model.orderId }}
+            Total: {{ model.total }}
 
-    Items:
-    ------
-    {{- for item in model.items }}
-    * {{ item.quantity }} x {{ item.name }} - {{ item.total | math.format "c" "en-US" }}
-    {{- end }}
+            Items:
+            ------
+            {{- for item in model.items }}
+            <li>
+                {{ item.quantity }} x {{ item.name }} - {{ item.total }}<br>
+            </li>
+            {{- end }}
 
-    Thanks,
-    BuyFromUs
-</ul>
-</body>
+            Thanks,
+            BuyFromUs
+        </ul>
+    </body>
 </html>

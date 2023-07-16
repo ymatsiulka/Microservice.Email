@@ -4,5 +4,6 @@ namespace Microservice.Email.Core.Factories.Interfaces;
 
 public interface IAddressFactory
 {
-    Address CreateAddress(string address);
+    Address Create(string address);
+    Address[] Create(IEnumerable<string> addresses);
 }

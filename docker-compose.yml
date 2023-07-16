@@ -34,6 +34,15 @@ services:
       - "1025:1025"
       - "8025:8025"
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/data
+      - ~/.docker-conf/rabbitmq/log/:/var/lib/rabbitmq/log
+
 volumes:
   postgres:
   pgadmin:

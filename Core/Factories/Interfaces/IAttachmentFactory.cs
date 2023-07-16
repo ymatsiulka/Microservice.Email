@@ -4,5 +4,6 @@ namespace Microservice.Email.Core.Factories.Interfaces;
 
 public interface IAttachmentFactory
 {
-    Attachment Create(IFormFile formFile);
+    Attachment Create(IFormFile attachment);
+    Attachment[] Create(IFormFileCollection attachments);
 }

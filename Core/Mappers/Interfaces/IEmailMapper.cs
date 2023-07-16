@@ -4,6 +4,6 @@ using Microservice.Email.Domain.Entities;
 
 namespace Microservice.Email.Core.Mappers.Interfaces;
 
-public interface IEmailMapper : IMapper<EmailEntity, EmailResponse>
+public interface IEmailMapper : IMapper<EmailEntity, EmailSendResponse>
 {
 }

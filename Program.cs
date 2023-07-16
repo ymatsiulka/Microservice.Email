@@ -52,13 +52,14 @@ builder.Services.AddFunctionalExtensions();
 builder.Services.AddEfCoreRepository();
 builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
 
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ITemplatedEmailService, TemplatedEmailService>();
 builder.Services.AddScoped<ISmtpClientProvider, SmtpClientProvider>();
 builder.Services.AddScoped<IRetryPolicyFactory, RetryPolicyFactory>();
 builder.Services.AddScoped<IAddressFactory, AddressFactory>();
-builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEmailMapper, EmailMapper>();
+builder.Services.AddScoped<IEmailEntityFactory, EmailEntityFactory>();
 builder.Services.AddScoped<IEmailFactory, EmailFactory>();
-builder.Services.AddScoped<IFluentEmailFactory, FluentEmailFactory>();
 builder.Services.AddScoped<IAttachmentFactory, AttachmentFactory>();
 
 builder.Services.AddScoped<ISender>(x =>

@@ -1,9 +1,9 @@
-﻿using Microservice.Email.Contracts.Requests;
-using Microservice.Email.Domain.Entities;
+﻿using FluentEmail.Core;
+using Microservice.Email.Contracts.Requests;
 
 namespace Microservice.Email.Core.Factories.Interfaces;
 
 public interface IEmailFactory
 {
-    EmailEntity Create(SendEmailRequest request);
+    IFluentEmail GetEmail(SendEmailRequest request);
 }

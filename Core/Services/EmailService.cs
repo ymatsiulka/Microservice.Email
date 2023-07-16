@@ -9,58 +9,48 @@ using Microservice.Email.Core.Factories.Interfaces;
 using Microservice.Email.Core.Mappers.Interfaces;
 using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Domain.Entities;
-using System.Reflection;
-using IFluentEmailFactory = Microservice.Email.Core.Factories.Interfaces.IFluentEmailFactory;
 
 namespace Microservice.Email.Core.Services;
 
 public sealed class EmailService : IEmailService
 {
-    private readonly IFluentEmailFactory fluentEmailFactory;
-    private readonly IAttachmentFactory attachmentFactory;
+    private readonly IEmailFactory emailFactory;
     private readonly IResultFactory resultFactory;
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
     private readonly IRepository<EmailEntity> emailRepository;
     private readonly IEmailMapper emailMapper;
-    private readonly IEmailFactory emailFactory;
+    private readonly IEmailEntityFactory emailEntityFactory;
     private readonly IRetryPolicyFactory retryPolicyFactory;
 
     public EmailService(
-        IFluentEmailFactory fluentEmailFactory,
-        IAttachmentFactory attachmentFactory,
+        IEmailFactory emailFactory,
         IResultFactory resultFactory,
         IUnitOfWorkFactory unitOfWorkFactory,
         IRepository<EmailEntity> emailRepository,
-        IEmailMapper emailMapper,
-        IEmailFactory emailFactory,
-        IRetryPolicyFactory retryPolicyFactory)
+        IEmailEntityFactory emailEntityFactory,
+        IRetryPolicyFactory retryPolicyFactory,
+        IEmailMapper emailMapper)
     {
-        this.fluentEmailFactory = fluentEmailFactory;
-        this.attachmentFactory = attachmentFactory;
+        this.emailFactory = emailFactory;
         this.resultFactory = resultFactory;
         this.unitOfWorkFactory = unitOfWorkFactory;
         this.emailRepository = emailRepository;
-        this.emailMapper = emailMapper;
-        this.emailFactory = emailFactory;
+        this.emailEntityFactory = emailEntityFactory;
         this.retryPolicyFactory = retryPolicyFactory;
+        this.emailMapper = emailMapper;
     }
 
-    public async Task<Result<EmailResponse>> Send(SendEmailRequest request)
+    public async Task<Result<EmailSendResponse>> Send(SendEmailRequest request)
     {
-        var email = fluentEmailFactory.GetEmail(request);
-        var attachments = request.Attachments?.Select(attachmentFactory.Create).ToList() ?? new List<Attachment>();
-        email.Attach(attachments);
+        var email = emailFactory.GetEmail(request);
 
         var policy = retryPolicyFactory.GetPolicy<SendResponse>();
         var emailResponse = await policy.ExecuteAsync(async () => await email.SendAsync());
 
         if (!emailResponse.Successful)
-        {
-            var errorMessage = string.Join(" ", emailResponse.ErrorMessages);
-            return resultFactory.Failure<EmailResponse>(new EmailSendException(errorMessage));
-        }
+            return resultFactory.Failure<EmailSendResponse>(new EmailSendException(emailResponse.ErrorMessages));
 
-        var emailEntity = emailFactory.Create(request);
+        var emailEntity = emailEntityFactory.Create(request);
         using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
             await emailRepository.Add(emailEntity);
@@ -70,37 +60,5 @@ public sealed class EmailService : IEmailService
         var response = emailMapper.Map(emailEntity);
 
         return response;
-    }
-
-        public async Task<Result<EmailResponse>> SendTemplated(SendTemplatedEmailRequest request)
-        {
-            var email = fluentEmailFactory.GetEmail(request);
-
-            var policy = retryPolicyFactory.GetPolicy<SendResponse>();
-            var emailResponse = await policy.ExecuteAsync(async () => await email.SendAsync());
-
-            if (!emailResponse.Successful)
-            {
-                var errorMessage = string.Join(" ", emailResponse.ErrorMessages);
-                return resultFactory.Failure<EmailResponse>(new EmailSendException(errorMessage));
-            }
-            //
-            // //var emailEntity = emailFactory.Create(request);
-            // var emailEntity = new EmailEntity()
-            // {
-            //     Recipients = request.Recipients,
-            //     Sender = request.Sender.Email,
-            //
-            // }
-            // using (var transaction = unitOfWorkFactory.BeginTransaction())
-            // {
-            //     await emailRepository.Add(emailEntity);
-            //     await transaction.Commit();
-            // }
-            //
-            // var response = emailMapper.Map(emailEntity);
-
-            return null;
-        }
     }
 }
