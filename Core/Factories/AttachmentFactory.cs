@@ -12,8 +12,7 @@ public sealed class AttachmentFactory : IAttachmentFactory
             ContentType = attachment.ContentType,
             Filename = attachment.FileName,
             Data = attachment.OpenReadStream(),
-            ContentId = Guid.NewGuid().ToString(),
-            IsInline = true
+            IsInline = false
         };
 
         return result;
