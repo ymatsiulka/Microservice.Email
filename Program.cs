@@ -72,9 +72,7 @@ builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(Dat
 builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(RetryPolicySettings)));
 builder.Services.Configure<SmtpSettings>(configuration.GetSection(nameof(SmtpSettings)));
 
-builder.Services
-    .AddFluentEmail("default_sender@admin.com")
-    .AddRazorRenderer();
+builder.Services.AddFluentEmail("default_sender@admin.com");
 
 var app = builder.Build();
 

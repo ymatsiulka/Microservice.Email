@@ -7,5 +7,5 @@ public sealed class SendTemplatedEmailRequest
     public required Sender? Sender { get; init; }
     public required string[] Recipients { get; init; }
     public required string TemplateName { get; init; }
-    public required Dictionary<string, object> Data { get; init; }
+    public required object Properties { get; init; }
 }

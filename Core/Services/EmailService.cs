@@ -72,11 +72,35 @@ public sealed class EmailService : IEmailService
         return response;
     }
 
-    public Task<Result<EmailResponse>> SendTemplated(SendTemplatedEmailRequest request)
-    {
-        var assembly = Assembly.GetExecutingAssembly();
-        //.UsingTemplateFromEmbedded("Microservice.Email.Templates.ExampleModel.cshtml", new { UserName = "John Doe" }, assembly);
+        public async Task<Result<EmailResponse>> SendTemplated(SendTemplatedEmailRequest request)
+        {
+            var email = fluentEmailFactory.GetEmail(request);
 
-        throw new NotImplementedException();
+            var policy = retryPolicyFactory.GetPolicy<SendResponse>();
+            var emailResponse = await policy.ExecuteAsync(async () => await email.SendAsync());
+
+            if (!emailResponse.Successful)
+            {
+                var errorMessage = string.Join(" ", emailResponse.ErrorMessages);
+                return resultFactory.Failure<EmailResponse>(new EmailSendException(errorMessage));
+            }
+            //
+            // //var emailEntity = emailFactory.Create(request);
+            // var emailEntity = new EmailEntity()
+            // {
+            //     Recipients = request.Recipients,
+            //     Sender = request.Sender.Email,
+            //
+            // }
+            // using (var transaction = unitOfWorkFactory.BeginTransaction())
+            // {
+            //     await emailRepository.Add(emailEntity);
+            //     await transaction.Commit();
+            // }
+            //
+            // var response = emailMapper.Map(emailEntity);
+
+            return null;
+        }
     }
 }

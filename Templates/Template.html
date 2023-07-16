@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Welcome Email</title>
+</head>
+<body>
+<ul>
+    Dear {{ model.name }},
+
+    Your order, {{model.orderId}}, is now ready to be collected.
+
+    Your order shall be delivered to {{ model.address }}.  If you need it delivered to another location, please contact as ASAP.
+
+    Order: {{ model.orderId}}
+    Total: {{ model.total | math.format "c" "en-US" }}
+
+    Items:
+    ------
+    {{- for item in model.items }}
+    * {{ item.quantity }} x {{ item.name }} - {{ item.total | math.format "c" "en-US" }}
+    {{- end }}
+
+    Thanks,
+    BuyFromUs
+</ul>
+</body>
+</html>
