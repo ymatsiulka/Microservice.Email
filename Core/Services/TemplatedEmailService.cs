@@ -20,7 +20,7 @@ public class TemplatedEmailService : ITemplatedEmailService
     {
         this.assemblyFileReader = assemblyFileReader;
     }
-
+    
     public async Task<SendEmailRequest> ProcessTemplatedRequest(SendTemplatedEmailRequest request)
     {
         var templatePath = string.Format(TemplateDirectoryPath, request.TemplateName);

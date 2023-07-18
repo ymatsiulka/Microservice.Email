@@ -12,14 +12,11 @@ namespace Microservice.Email.Controllers;
 public sealed class EmailController : ControllerBase
 {
     private readonly IEmailService emailService;
-    private readonly ITemplatedEmailService templatedEmailService;
 
     public EmailController(
-        IEmailService emailService,
-        ITemplatedEmailService templatedEmailService)
+        IEmailService emailService)
     {
         this.emailService = emailService;
-        this.templatedEmailService = templatedEmailService;
     }
 
     [ProducesBadRequest]
@@ -37,8 +34,7 @@ public sealed class EmailController : ControllerBase
     [HttpPost("templated/send")]
     public async Task<IActionResult> SendTemplatedEmail([FromForm] SendTemplatedEmailRequest request)
     {
-        var sendRequest = await templatedEmailService.ProcessTemplatedRequest(request);
-        var result = await emailService.Send(sendRequest);
+        var result = await emailService.SendTemplate(request);
         var response = result.MatchActionResult(Ok);
         return response;
     }

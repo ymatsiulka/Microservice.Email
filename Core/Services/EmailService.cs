@@ -1,64 +1,55 @@
-﻿using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
-using ArchitectProg.Kernel.Extensions.Interfaces;
+﻿using ArchitectProg.Kernel.Extensions.Exceptions;
 using ArchitectProg.Kernel.Extensions.Utils;
-using FluentEmail.Core.Models;
 using Microservice.Email.Contracts.Requests;
 using Microservice.Email.Contracts.Responses;
-using Microservice.Email.Core.Exceptions;
-using Microservice.Email.Core.Factories.Interfaces;
-using Microservice.Email.Core.Mappers.Interfaces;
 using Microservice.Email.Core.Services.Interfaces;
-using Microservice.Email.Domain.Entities;
+using Microservice.Email.Core.Validators.Interfaces;
 
 namespace Microservice.Email.Core.Services;
 
-public sealed class EmailService : IEmailService
+public class EmailService : IEmailService
 {
-    private readonly IEmailFactory emailFactory;
-    private readonly IResultFactory resultFactory;
-    private readonly IUnitOfWorkFactory unitOfWorkFactory;
-    private readonly IRepository<EmailEntity> emailRepository;
-    private readonly IEmailMapper emailMapper;
-    private readonly IEmailEntityFactory emailEntityFactory;
-    private readonly IRetryPolicyFactory retryPolicyFactory;
+    private readonly ISendEmailService sendEmailService;
+    private readonly ITemplatedEmailService templatedEmailService;
+    private readonly ISendEmailRequestValidator sendEmailRequestValidator;
+    private readonly ISendTemplatedEmailRequestValidator sendTemplatedEmailRequestValidator;
 
     public EmailService(
-        IEmailFactory emailFactory,
-        IResultFactory resultFactory,
-        IUnitOfWorkFactory unitOfWorkFactory,
-        IRepository<EmailEntity> emailRepository,
-        IEmailEntityFactory emailEntityFactory,
-        IRetryPolicyFactory retryPolicyFactory,
-        IEmailMapper emailMapper)
+        ISendEmailService sendEmailService,
+        ITemplatedEmailService templatedEmailService,
+        ISendEmailRequestValidator sendEmailRequestValidator,
+        ISendTemplatedEmailRequestValidator sendTemplatedEmailRequestValidator)
     {
-        this.emailFactory = emailFactory;
-        this.resultFactory = resultFactory;
-        this.unitOfWorkFactory = unitOfWorkFactory;
-        this.emailRepository = emailRepository;
-        this.emailEntityFactory = emailEntityFactory;
-        this.retryPolicyFactory = retryPolicyFactory;
-        this.emailMapper = emailMapper;
+        this.sendEmailService = sendEmailService;
+        this.templatedEmailService = templatedEmailService;
+        this.sendEmailRequestValidator = sendEmailRequestValidator;
+        this.sendTemplatedEmailRequestValidator = sendTemplatedEmailRequestValidator;
     }
 
     public async Task<Result<EmailSendResponse>> Send(SendEmailRequest request)
     {
-        var email = emailFactory.GetEmail(request);
-
-        var policy = retryPolicyFactory.GetPolicy<SendResponse>();
-        var emailResponse = await policy.ExecuteAsync(async () => await email.SendAsync());
-
-        if (!emailResponse.Successful)
-            return resultFactory.Failure<EmailSendResponse>(new EmailSendException(emailResponse.ErrorMessages));
-
-        var emailEntity = emailEntityFactory.Create(request);
-        using (var transaction = unitOfWorkFactory.BeginTransaction())
+        var errors = sendEmailRequestValidator.Validate(request);
+        if (errors.Any())
         {
-            await emailRepository.Add(emailEntity);
-            await transaction.Commit();
+            var message = string.Join("\n", errors);
+            throw new ValidationException(message);
         }
 
-        var response = emailMapper.Map(emailEntity);
+        var result = await sendEmailService.Send(request);
+        return result;
+    }
 
-        return response;
+    public async Task<Result<EmailSendResponse>> SendTemplate(SendTemplatedEmailRequest request)
+    {
+        var errors = sendTemplatedEmailRequestValidator.Validate(request);
+        if (errors.Any())
+        {
+            var message = string.Join("\n", errors);
+            throw new ValidationException(message);
+        }
+
+        var sendRequest = await templatedEmailService.ProcessTemplatedRequest(request);
+        var result = await sendEmailService.Send(sendRequest);
+        return result;
     }
 }

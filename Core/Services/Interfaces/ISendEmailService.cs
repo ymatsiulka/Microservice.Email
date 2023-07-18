@@ -4,8 +4,7 @@ using Microservice.Email.Contracts.Responses;
 
 namespace Microservice.Email.Core.Services.Interfaces;
 
-public interface IEmailService
+public interface ISendEmailService
 {
     Task<Result<EmailSendResponse>> Send(SendEmailRequest request);
-    Task<Result<EmailSendResponse>> SendTemplate(SendTemplatedEmailRequest request);
 }

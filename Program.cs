@@ -14,6 +14,8 @@ using Microservice.Email.Core.Mappers.Interfaces;
 using Microservice.Email.Core.Services;
 using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Core.Settings;
+using Microservice.Email.Core.Validators;
+using Microservice.Email.Core.Validators.Interfaces;
 using Microservice.Email.Extensions;
 using Microservice.Email.Persistence;
 using Microservice.Email.Smtp;
@@ -52,15 +54,21 @@ builder.Services.AddFunctionalExtensions();
 builder.Services.AddEfCoreRepository();
 builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
 
-builder.Services.AddScoped<IEmailService, EmailService>();
+
 builder.Services.AddScoped<ITemplatedEmailService, TemplatedEmailService>();
-builder.Services.AddScoped<ISmtpClientProvider, SmtpClientProvider>();
+builder.Services.AddScoped<ISendEmailService, SendEmailService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IRetryPolicyFactory, RetryPolicyFactory>();
-builder.Services.AddScoped<IAddressFactory, AddressFactory>();
-builder.Services.AddScoped<IEmailMapper, EmailMapper>();
 builder.Services.AddScoped<IEmailEntityFactory, EmailEntityFactory>();
-builder.Services.AddScoped<IEmailFactory, EmailFactory>();
 builder.Services.AddScoped<IAttachmentFactory, AttachmentFactory>();
+builder.Services.AddScoped<IAddressFactory, AddressFactory>();
+builder.Services.AddScoped<IEmailFactory, EmailFactory>();
+builder.Services.AddScoped<IEmailMapper, EmailMapper>();
+builder.Services.AddScoped<ISendTemplatedEmailRequestValidator, SendTemplatedEmailRequestValidator>();
+builder.Services.AddScoped<IBaseEmailRequestValidator, BaseEmailRequestValidator>();
+builder.Services.AddScoped<ISendEmailRequestValidator, SendEmailRequestValidator>();
+builder.Services.AddScoped<IEmailAddressValidator, EmailAddressValidator>();
+builder.Services.AddScoped<ISmtpClientProvider, SmtpClientProvider>();
 
 builder.Services.AddScoped<ISender>(x =>
 {
