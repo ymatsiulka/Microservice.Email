@@ -54,7 +54,7 @@ builder.Services.AddFunctionalExtensions();
 builder.Services.AddEfCoreRepository();
 builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
 
-
+builder.Services.AddScoped<IHtmlSanitizationService, HtmlSanitizationService>();
 builder.Services.AddScoped<ITemplatedEmailService, TemplatedEmailService>();
 builder.Services.AddScoped<ISendEmailService, SendEmailService>();
 builder.Services.AddScoped<IEmailService, EmailService>();

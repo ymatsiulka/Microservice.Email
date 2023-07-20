@@ -33,7 +33,7 @@ public class TemplatedEmailService : ITemplatedEmailService
             throw new InvalidTemplateException(templatePath, errors);
         }
 
-        var properties = request.TemplateProperties?.ToString() ?? string.Empty;
+        var properties = request.TemplateProperties ?? string.Empty;
         var model = JsonConvert.DeserializeObject<ExpandoObject>(properties);
 
         var body = await template.RenderAsync(new { model }, property => property.Name.ToLower());

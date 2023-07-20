@@ -1,5 +1,4 @@
-﻿using Microservice.Email.Contracts.Common;
-using Microservice.Email.Contracts.Requests.Base;
+﻿using Microservice.Email.Contracts.Requests.Base;
 
 namespace Microservice.Email.Contracts.Requests;
 

@@ -15,9 +15,7 @@ public sealed class BaseEmailRequestValidator : IBaseEmailRequestValidator
     public IList<string> Validate(BaseEmailRequest baseEmailRequest)
     {
         if (baseEmailRequest is null)
-        {
             throw new ArgumentNullException(nameof(baseEmailRequest));
-        }
 
         var errors = new List<string>();
 

@@ -31,10 +31,10 @@ public sealed class EmailController : ControllerBase
 
     [ProducesBadRequest]
     [ProducesOk(typeof(EmailSendResponse))]
-    [HttpPost("templated/send")]
+    [HttpPost("send/templated")]
     public async Task<IActionResult> SendTemplatedEmail([FromForm] SendTemplatedEmailRequest request)
     {
-        var result = await emailService.SendTemplate(request);
+        var result = await emailService.SendTemplated(request);
         var response = result.MatchActionResult(Ok);
         return response;
     }

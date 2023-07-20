@@ -39,7 +39,7 @@ public class EmailService : IEmailService
         return result;
     }
 
-    public async Task<Result<EmailSendResponse>> SendTemplate(SendTemplatedEmailRequest request)
+    public async Task<Result<EmailSendResponse>> SendTemplated(SendTemplatedEmailRequest request)
     {
         var errors = sendTemplatedEmailRequestValidator.Validate(request);
         if (errors.Any())

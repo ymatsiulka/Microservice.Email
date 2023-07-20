@@ -7,5 +7,5 @@ namespace Microservice.Email.Core.Services.Interfaces;
 public interface IEmailService
 {
     Task<Result<EmailSendResponse>> Send(SendEmailRequest request);
-    Task<Result<EmailSendResponse>> SendTemplate(SendTemplatedEmailRequest request);
+    Task<Result<EmailSendResponse>> SendTemplated(SendTemplatedEmailRequest request);
 }
