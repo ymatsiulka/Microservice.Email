@@ -12,9 +12,16 @@ public sealed class SendTemplatedEmailRequestValidator : ISendTemplatedEmailRequ
         this.baseEmailRequestValidator = baseEmailRequestValidator;
     }
 
-    public IList<string> Validate(SendTemplatedEmailRequest sendTemplateEmailRequest)
+    public IEnumerable<string> Validate(SendTemplatedEmailRequest request)
     {
-        var result = baseEmailRequestValidator.Validate(sendTemplateEmailRequest);
-        return result;
+        if (request is null)
+            throw new ArgumentNullException(nameof(request));
+
+        var errors = baseEmailRequestValidator.Validate(request);
+        foreach (var error in errors)
+            yield return error;
+
+        if (request.TemplateProperties is { Length: > 8192 })
+            yield return "Invalid template properties. Properties length should be less than 8192 characters";
     }
 }

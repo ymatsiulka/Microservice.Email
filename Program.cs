@@ -28,6 +28,7 @@ var configuration = builder.Configuration;
 
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddGrpc();
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(new BadRequestOnExceptionFilter(typeof(ValidationException)));
@@ -67,7 +68,7 @@ builder.Services.AddScoped<IEmailMapper, EmailMapper>();
 builder.Services.AddScoped<ISendTemplatedEmailRequestValidator, SendTemplatedEmailRequestValidator>();
 builder.Services.AddScoped<IBaseEmailRequestValidator, BaseEmailRequestValidator>();
 builder.Services.AddScoped<ISendEmailRequestValidator, SendEmailRequestValidator>();
-builder.Services.AddScoped<IEmailAddressValidator, EmailAddressValidator>();
+builder.Services.AddScoped<ISenderValidator, SenderValidator>();
 builder.Services.AddScoped<ISmtpClientProvider, SmtpClientProvider>();
 
 builder.Services.AddScoped<ISender>(x =>

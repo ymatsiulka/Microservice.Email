@@ -28,10 +28,10 @@ public class EmailService : IEmailService
 
     public async Task<Result<EmailSendResponse>> Send(SendEmailRequest request)
     {
-        var errors = sendEmailRequestValidator.Validate(request);
+        var errors = sendEmailRequestValidator.Validate(request).ToArray();
         if (errors.Any())
         {
-            var message = string.Join("\n", errors);
+            var message = string.Join(". ", errors);
             throw new ValidationException(message);
         }
 
@@ -41,10 +41,10 @@ public class EmailService : IEmailService
 
     public async Task<Result<EmailSendResponse>> SendTemplated(SendTemplatedEmailRequest request)
     {
-        var errors = sendTemplatedEmailRequestValidator.Validate(request);
+        var errors = sendTemplatedEmailRequestValidator.Validate(request).ToArray();
         if (errors.Any())
         {
-            var message = string.Join("\n", errors);
+            var message = string.Join(". ", errors);
             throw new ValidationException(message);
         }
 

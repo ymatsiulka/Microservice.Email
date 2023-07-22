@@ -1,0 +1,17 @@
+﻿using Microservice.Email.Contracts.Common;
+using Microservice.Email.Core.Extensions;
+using Microservice.Email.Core.Validators.Interfaces;
+
+namespace Microservice.Email.Core.Validators;
+
+public class SenderValidator : ISenderValidator
+{
+    public IEnumerable<string> Validate(Sender sender)
+    {
+        if (!sender.Email.IsValidEmail())
+            yield return "Invalid sender email";
+
+        if (sender.Name is { Length: > 128 })
+            yield return "Too long sender name. Sender name must be less than 128 characters";
+    }
+}

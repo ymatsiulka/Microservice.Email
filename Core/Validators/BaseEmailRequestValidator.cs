@@ -1,38 +1,43 @@
 ﻿using Microservice.Email.Contracts.Requests.Base;
+using Microservice.Email.Core.Extensions;
 using Microservice.Email.Core.Validators.Interfaces;
 
 namespace Microservice.Email.Core.Validators;
 
 public sealed class BaseEmailRequestValidator : IBaseEmailRequestValidator
 {
-    private readonly IEmailAddressValidator emailAddressValidator;
+    private readonly ISenderValidator senderValidator;
 
-    public BaseEmailRequestValidator(IEmailAddressValidator emailAddressValidator)
+    public BaseEmailRequestValidator(ISenderValidator senderValidator)
     {
-        this.emailAddressValidator = emailAddressValidator;
+        this.senderValidator = senderValidator;
     }
 
-    public IList<string> Validate(BaseEmailRequest baseEmailRequest)
+    public IEnumerable<string> Validate(BaseEmailRequest request)
     {
-        if (baseEmailRequest is null)
-            throw new ArgumentNullException(nameof(baseEmailRequest));
-
-        var errors = new List<string>();
-
-        var sender = baseEmailRequest.Sender;
-
-        if (sender is not null &&
-            !emailAddressValidator.IsValid(sender.Email, sender.Name))
+        if (request.Sender is not null)
         {
-            errors.Add($"Sender email={sender.Email} or name={sender.Name} are not valid!");
+            var senderErrors = senderValidator.Validate(request.Sender);
+            foreach (var senderError in senderErrors)
+                yield return senderError;
         }
 
-        var invalidRecipients = baseEmailRequest.Recipients.Where(recipient => !emailAddressValidator.IsValid(recipient)).ToArray();
+        if (request.Recipients.IsEmpty())
+            yield return "Recipients are required to send email";
+
+        var invalidRecipients = request.Recipients.Where(recipient => !recipient.IsValidEmail()).ToArray();
         if (invalidRecipients.Any())
         {
-            errors.Add($"Recipient with emails are invalid: {string.Join(", ", invalidRecipients)}");
+            var invalidEmails = string.Join(", ", invalidRecipients);
+            yield return $"Invalid recipients found. Invalid emails: {invalidEmails}";
         }
 
-        return errors;
+        if (request.Attachments is not null)
+        {
+            //file size should not exceed 30mb
+            var haveInvalidAttachments = request.Attachments.Any(attachment => attachment.Length > 30000000 );
+            if (haveInvalidAttachments)
+                yield return "Attachments size must be lower than 30mb";
+        }
     }
 }

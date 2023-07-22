@@ -1,4 +1,5 @@
-﻿using Microservice.Email.Contracts.Requests;
+﻿using ArchitectProg.FunctionalExtensions.Extensions;
+using Microservice.Email.Contracts.Requests;
 using Microservice.Email.Core.Validators.Interfaces;
 
 namespace Microservice.Email.Core.Validators;
@@ -12,9 +13,16 @@ public sealed class SendEmailRequestValidator : ISendEmailRequestValidator
         this.baseEmailRequestValidator = baseEmailRequestValidator;
     }
 
-    public IList<string> Validate(SendEmailRequest baseEmailRequest)
+    public IEnumerable<string> Validate(SendEmailRequest request)
     {
-        var result = baseEmailRequestValidator.Validate(baseEmailRequest);
-        return result;
+        var errors = baseEmailRequestValidator.Validate(request);
+        foreach (var error in errors)
+            yield return error;
+
+        if (request.Subject.IsNullOrWhiteSpace() || request.Subject is { Length: > 256 })
+            yield return "Invalid subject. Subject should be not empty and have length less than 256 characters";
+
+        if (request.Body.IsNullOrWhiteSpace() || request.Body is { Length: > 8192 })
+            yield return "Invalid subject. Subject should be not empty and have length less than 8192 characters";
     }
 }

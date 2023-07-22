@@ -4,5 +4,5 @@ namespace Microservice.Email.Core.Validators.Interfaces;
 
 public interface IBaseEmailRequestValidator
 {
-    IList<string> Validate(BaseEmailRequest baseEmailRequest);
+    IEnumerable<string> Validate(BaseEmailRequest request);
 }
