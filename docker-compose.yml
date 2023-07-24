@@ -35,9 +35,15 @@ services:
       - "8025:8025"
 
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    container_name: "rabbitmq"
+    image: rabbitmq:3.8-management-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbit
+      - RABBITMQ_DEFAULT_PASS=rabbit
     ports:
+      # RabbitMQ instance
       - 5672:5672
+      # Web interface
       - 15672:15672
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/data
