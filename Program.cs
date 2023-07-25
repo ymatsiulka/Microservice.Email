@@ -17,6 +17,7 @@ using Microservice.Email.Core.Settings;
 using Microservice.Email.Core.Validators;
 using Microservice.Email.Core.Validators.Interfaces;
 using Microservice.Email.Extensions;
+using Microservice.Email.Infrastructure.RabbitMQ;
 using Microservice.Email.Persistence;
 using Microservice.Email.Smtp;
 using Microservice.Email.Smtp.Interfaces;
@@ -81,6 +82,7 @@ builder.Services.AddScoped<ISender>(x =>
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(RetryPolicySettings)));
 builder.Services.Configure<SmtpSettings>(configuration.GetSection(nameof(SmtpSettings)));
+builder.Services.Configure<RabbitMQSettings>(configuration.GetSection(nameof(RabbitMQSettings)));
 
 builder.Services.AddFluentEmail("default_sender@admin.com");
 
