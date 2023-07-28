@@ -17,7 +17,7 @@ using Microservice.Email.Core.Settings;
 using Microservice.Email.Core.Validators;
 using Microservice.Email.Core.Validators.Interfaces;
 using Microservice.Email.Extensions;
-using Microservice.Email.Persistence;
+using Microservice.Email.Infrastructure.Persistence;
 using Microservice.Email.Smtp;
 using Microservice.Email.Smtp.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -53,8 +53,8 @@ builder.Services.AddControllers(options =>
 builder.Services.AddKernelExtensions();
 builder.Services.AddFunctionalExtensions();
 builder.Services.AddEfCoreRepository();
+builder.Services.AddRabbitMQ();
 builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
-
 builder.Services.AddScoped<IHtmlSanitizationService, HtmlSanitizationService>();
 builder.Services.AddScoped<ITemplatedEmailService, TemplatedEmailService>();
 builder.Services.AddScoped<ISendEmailService, SendEmailService>();
