@@ -1,6 +1,6 @@
 ﻿using ArchitectProg.WebApi.Extensions.Attributes;
-using Microservice.Email.Contracts.Requests;
-using Microservice.Email.Contracts.Responses;
+using Microservice.Email.Core.Contracts.Requests;
+using Microservice.Email.Core.Contracts.Responses;
 using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +13,7 @@ public sealed class EmailController : ControllerBase
 {
     private readonly IEmailService emailService;
 
-    public EmailController(
-        IEmailService emailService)
+    public EmailController(IEmailService emailService)
     {
         this.emailService = emailService;
     }

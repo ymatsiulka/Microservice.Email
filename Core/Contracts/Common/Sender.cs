@@ -1,4 +1,4 @@
-﻿namespace Microservice.Email.Contracts.Common;
+﻿namespace Microservice.Email.Core.Contracts.Common;
 
 public sealed class Sender
 {

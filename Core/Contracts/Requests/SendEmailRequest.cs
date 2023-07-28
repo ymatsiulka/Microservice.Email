@@ -1,6 +1,6 @@
-﻿using Microservice.Email.Contracts.Requests.Base;
+﻿using Microservice.Email.Core.Contracts.Requests.Base;
 
-namespace Microservice.Email.Contracts.Requests;
+namespace Microservice.Email.Core.Contracts.Requests;
 
 public sealed class SendEmailRequest : BaseEmailRequest
 {

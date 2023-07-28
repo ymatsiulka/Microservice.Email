@@ -1,5 +1,5 @@
 ﻿using FluentEmail.Core;
-using Microservice.Email.Contracts.Requests;
+using Microservice.Email.Core.Contracts.Requests;
 
 namespace Microservice.Email.Core.Factories.Interfaces;
 

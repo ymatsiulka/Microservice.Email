@@ -1,7 +1,7 @@
 ﻿using ArchitectProg.FunctionalExtensions.Factories.Interfaces;
 using ArchitectProg.Kernel.Extensions.Mappers;
-using Microservice.Email.Contracts.Common;
-using Microservice.Email.Contracts.Responses;
+using Microservice.Email.Core.Contracts.Common;
+using Microservice.Email.Core.Contracts.Responses;
 using Microservice.Email.Core.Mappers.Interfaces;
 using Microservice.Email.Domain.Entities;
 

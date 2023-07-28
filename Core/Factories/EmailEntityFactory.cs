@@ -1,5 +1,5 @@
 ﻿using ArchitectProg.FunctionalExtensions.Services.Interfaces;
-using Microservice.Email.Contracts.Requests;
+using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Factories.Interfaces;
 using Microservice.Email.Domain.Entities;
 using Microservice.Email.Domain.Enums;

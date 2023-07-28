@@ -1,5 +1,5 @@
 ﻿using ArchitectProg.FunctionalExtensions.Extensions;
-using Microservice.Email.Contracts.Requests;
+using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Validators.Interfaces;
 
 namespace Microservice.Email.Core.Validators;

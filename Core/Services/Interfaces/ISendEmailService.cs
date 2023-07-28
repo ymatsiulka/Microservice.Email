@@ -1,6 +1,6 @@
 ﻿using ArchitectProg.Kernel.Extensions.Utils;
-using Microservice.Email.Contracts.Requests;
-using Microservice.Email.Contracts.Responses;
+using Microservice.Email.Core.Contracts.Requests;
+using Microservice.Email.Core.Contracts.Responses;
 
 namespace Microservice.Email.Core.Services.Interfaces;
 

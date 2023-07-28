@@ -1,6 +1,6 @@
-﻿using Microservice.Email.Contracts.Common;
+﻿using Microservice.Email.Core.Contracts.Common;
 
-namespace Microservice.Email.Contracts.Requests.Base;
+namespace Microservice.Email.Core.Contracts.Requests.Base;
 
 public abstract class BaseEmailRequest
 {

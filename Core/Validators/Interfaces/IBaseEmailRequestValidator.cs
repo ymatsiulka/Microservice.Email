@@ -1,4 +1,4 @@
-﻿using Microservice.Email.Contracts.Requests.Base;
+﻿using Microservice.Email.Core.Contracts.Requests.Base;
 
 namespace Microservice.Email.Core.Validators.Interfaces;
 

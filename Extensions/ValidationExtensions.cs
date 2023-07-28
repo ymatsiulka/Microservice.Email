@@ -1,4 +1,4 @@
-﻿namespace Microservice.Email.Core.Extensions;
+﻿namespace Microservice.Email.Extensions;
 
 public static class ValidationExtensions
 {

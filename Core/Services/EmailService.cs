@@ -1,7 +1,7 @@
 ﻿using ArchitectProg.Kernel.Extensions.Exceptions;
 using ArchitectProg.Kernel.Extensions.Utils;
-using Microservice.Email.Contracts.Requests;
-using Microservice.Email.Contracts.Responses;
+using Microservice.Email.Core.Contracts.Requests;
+using Microservice.Email.Core.Contracts.Responses;
 using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Core.Validators.Interfaces;
 

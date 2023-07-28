@@ -1,5 +1,4 @@
-﻿using Microservice.Email.Core.Extensions;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -26,8 +25,8 @@ public static class PropertyBuilderExtensions
     private static ValueConverter<T, string> CreateValueConverter<T>()
     {
         var converter = new ValueConverter<T, string>(
-            v => JsonExtensions.Serialize(v),
-            v => JsonExtensions.Deserialize<T>(v)
+            x => x.Serialize(),
+            x => x.DeserializeOrThrow<T>()
         );
 
         return converter;
@@ -37,9 +36,9 @@ public static class PropertyBuilderExtensions
     {
         var comparer = new ValueComparer<T?>
         (
-            (l, r) => JsonExtensions.Serialize(l) == JsonExtensions.Serialize(r),
-            v => v != null ? JsonExtensions.Serialize(v).GetHashCode(StringComparison.Ordinal) : 0,
-            v => JsonExtensions.Deserialize<T>(JsonExtensions.Serialize(v))
+            (x, y) => x.Serialize() == y.Serialize(),
+            x => x != null ? x.Serialize().GetHashCode(StringComparison.Ordinal) : 0,
+            x => x
         );
 
         return comparer;

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Microservice.Email.Core.Extensions;
+namespace Microservice.Email.Extensions;
 
 public static class EncodingExtensions
 {

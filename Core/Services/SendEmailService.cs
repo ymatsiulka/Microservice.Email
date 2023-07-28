@@ -2,8 +2,8 @@
 using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.Kernel.Extensions.Utils;
 using FluentEmail.Core.Models;
-using Microservice.Email.Contracts.Requests;
-using Microservice.Email.Contracts.Responses;
+using Microservice.Email.Core.Contracts.Requests;
+using Microservice.Email.Core.Contracts.Responses;
 using Microservice.Email.Core.Exceptions;
 using Microservice.Email.Core.Factories.Interfaces;
 using Microservice.Email.Core.Mappers.Interfaces;

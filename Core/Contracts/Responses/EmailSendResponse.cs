@@ -1,7 +1,7 @@
 ﻿using ArchitectProg.FunctionalExtensions.Contracts;
-using Microservice.Email.Contracts.Common;
+using Microservice.Email.Core.Contracts.Common;
 
-namespace Microservice.Email.Contracts.Responses;
+namespace Microservice.Email.Core.Contracts.Responses;
 
 public sealed class EmailSendResponse
 {

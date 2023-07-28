@@ -1,6 +1,6 @@
-﻿using Microservice.Email.Contracts.Common;
-using Microservice.Email.Core.Extensions;
+﻿using Microservice.Email.Core.Contracts.Common;
 using Microservice.Email.Core.Validators.Interfaces;
+using Microservice.Email.Extensions;
 
 namespace Microservice.Email.Core.Validators;
 

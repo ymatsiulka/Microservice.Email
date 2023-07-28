@@ -1,10 +1,10 @@
 ﻿using ArchitectProg.FunctionalExtensions.Services.Interfaces;
-using Microservice.Email.Contracts.Requests;
 using Microservice.Email.Core.Exceptions;
-using Microservice.Email.Core.Extensions;
 using Microservice.Email.Core.Services.Interfaces;
 using Scriban;
 using System.Dynamic;
+using Microservice.Email.Core.Contracts.Requests;
+using Microservice.Email.Extensions;
 
 namespace Microservice.Email.Core.Services;
 
@@ -34,7 +34,7 @@ public class TemplatedEmailService : ITemplatedEmailService
         }
 
         var properties = request.TemplateProperties ?? string.Empty;
-        var model = JsonExtensions.Deserialize<ExpandoObject>(properties);
+        var model = properties.Deserialize<ExpandoObject>();
 
         var body = await template.RenderAsync(new { model }, property => property.Name.ToLower());
         var subject = GetSubject(body);
