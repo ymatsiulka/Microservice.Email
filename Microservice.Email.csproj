@@ -40,6 +40,7 @@
         <Protobuf Include="Grpc\Protos\Contracts\Email.proto" />
         <None Remove="Grpc\Protos\EmailService.proto" />
         <Protobuf Include="Grpc\Protos\EmailService.proto" />
+        <None Remove="Grpc\Protos\ApplicationService.proto" />
     </ItemGroup>
 
 </Project>

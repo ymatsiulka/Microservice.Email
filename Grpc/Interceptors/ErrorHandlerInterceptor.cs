@@ -1,16 +1,21 @@
 ﻿using System.Net;
 using ArchitectProg.Kernel.Extensions.Exceptions;
 using Grpc.Core;
+using Grpc.Core.Interceptors;
 
-namespace Microservice.Email.Grpc.Utils;
+namespace Microservice.Email.Grpc.Interceptors;
 
-public static class ExceptionHandler
+public class ErrorHandlerInterceptor : Interceptor
 {
-    public static async Task<T> TryExecuteOperation<T>(Func<Task<T>> operation)
+    public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
+        TRequest request,
+        ServerCallContext context,
+        UnaryServerMethod<TRequest, TResponse> continuation)
     {
         try
         {
-            return await operation();
+            var response = await base.UnaryServerHandler(request, context, continuation);
+            return response;
         }
         catch (ResourceNotFoundException ex)
         {
@@ -26,7 +31,7 @@ public static class ExceptionHandler
         }
     }
 
-    public static RpcException GetRpcException(StatusCode statusCode, Exception exception)
+    private static RpcException GetRpcException(StatusCode statusCode, Exception exception)
     {
         var message = WebUtility.UrlEncode(exception.Message);
         var stackTrace = WebUtility.UrlEncode(exception.StackTrace ?? string.Empty);

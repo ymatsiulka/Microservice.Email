@@ -4,10 +4,8 @@ using Grpc.Services;
 using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Extensions;
 using Microservice.Email.Grpc.Mappers.Interfaces;
-using Microservice.Email.Grpc.Utils;
 
-
-namespace Microservice.Email.Grpc;
+namespace Microservice.Email.Grpc.Services;
 
 public class GrpcEmailService : EmailService.EmailServiceBase
 {
@@ -28,29 +26,23 @@ public class GrpcEmailService : EmailService.EmailServiceBase
         this.sendTemplatedEmailRequestMapper = sendTemplatedEmailRequestMapper;
     }
 
-    public override async Task<EmailResponse> Send(
-        SendEmailRequest request,
+    public override async Task<GrpcEmailResponse> Send(
+        GrpcSendEmailRequest request,
         ServerCallContext context)
     {
-        return await ExceptionHandler.TryExecuteOperation(async () =>
-        {
-            var processedRequest = sendEmailRequestMapper.Map(request);
-            var result = await emailService.Send(processedRequest);
-            var response = emailResponseMapper.Map(result.GetOrThrow());
-            return response;
-        });
+        var processedRequest = sendEmailRequestMapper.Map(request);
+        var result = await emailService.Send(processedRequest);
+        var response = emailResponseMapper.Map(result.GetOrThrow());
+        return response;
     }
 
-    public override async Task<EmailResponse> SendTemplated(
-        SendTemplatedEmailRequest request,
+    public override async Task<GrpcEmailResponse> SendTemplated(
+        GrpcSendTemplatedEmailRequest request,
         ServerCallContext context)
     {
-        return await ExceptionHandler.TryExecuteOperation(async () =>
-        {
-            var processedRequest = sendTemplatedEmailRequestMapper.Map(request);
-            var result = await emailService.SendTemplated(processedRequest);
-            var response = emailResponseMapper.Map(result.GetOrThrow());
-            return response;
-        });
+        var processedRequest = sendTemplatedEmailRequestMapper.Map(request);
+        var result = await emailService.SendTemplated(processedRequest);
+        var response = emailResponseMapper.Map(result.GetOrThrow());
+        return response;
     }
 }

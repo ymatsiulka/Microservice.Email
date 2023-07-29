@@ -2,12 +2,12 @@
 
 option csharp_namespace = "Grpc.Contracts.Common";
 
-message Sender {
+message GrpcSender {
   string Name = 1;
   string Email = 2;
 }
 
-message EnumItem {
+message GrpcEnumItem {
   int32 Id = 1;
   string Name = 2;
 }

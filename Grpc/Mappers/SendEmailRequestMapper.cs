@@ -1,17 +1,18 @@
 ﻿using ArchitectProg.Kernel.Extensions.Mappers;
 using Grpc.Contracts.Email;
 using Microservice.Email.Core.Contracts.Common;
+using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Grpc.Mappers.Interfaces;
 
 namespace Microservice.Email.Grpc.Mappers;
 
 public class SendEmailRequestMapper :
-    Mapper<SendEmailRequest, Core.Contracts.Requests.SendEmailRequest>,
+    Mapper<GrpcSendEmailRequest, SendEmailRequest>,
     ISendEmailRequestMapper
 {
-    public override Core.Contracts.Requests.SendEmailRequest Map(SendEmailRequest source)
+    public override SendEmailRequest Map(GrpcSendEmailRequest source)
     {
-        var result = new Core.Contracts.Requests.SendEmailRequest
+        var result = new SendEmailRequest
         {
             Body = source.Body,
             Subject = source.Subject,

@@ -17,9 +17,10 @@ using Microservice.Email.Core.Settings;
 using Microservice.Email.Core.Validators;
 using Microservice.Email.Core.Validators.Interfaces;
 using Microservice.Email.Extensions;
-using Microservice.Email.Grpc;
+using Microservice.Email.Grpc.Interceptors;
 using Microservice.Email.Grpc.Mappers;
 using Microservice.Email.Grpc.Mappers.Interfaces;
+using Microservice.Email.Grpc.Services;
 using Microservice.Email.Infrastructure.Persistence;
 using Microservice.Email.Smtp;
 using Microservice.Email.Smtp.Interfaces;
@@ -31,7 +32,13 @@ var configuration = builder.Configuration;
 
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddGrpc();
+
+builder.Services.AddGrpc(x =>
+{
+    x.Interceptors.Add<ErrorHandlerInterceptor>();
+    x.EnableDetailedErrors = true;
+});
+
 builder.Services.AddGrpcReflection();
 builder.Services.AddScoped<ISendEmailRequestMapper, SendEmailRequestMapper>();
 builder.Services.AddScoped<ISendTemplatedEmailRequestMapper, SendTemplatedEmailRequestMapper>();

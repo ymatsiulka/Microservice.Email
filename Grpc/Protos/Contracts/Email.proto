@@ -4,24 +4,24 @@ import "Grpc/Protos/Contracts/Common.proto";
 
 option csharp_namespace = "Grpc.Contracts.Email";
 
-message SendEmailRequest {
-  Sender Sender = 1;
+message GrpcSendEmailRequest {
+  GrpcSender Sender = 1;
   repeated string Recipients = 2;
   string Body = 3;
   string Subject = 4;
 }
 
-message SendTemplatedEmailRequest {
-  Sender Sender = 1;
+message GrpcSendTemplatedEmailRequest {
+  GrpcSender Sender = 1;
   repeated string Recipients = 2;
   string TemplateName = 3;
   string TemplateProperties = 4;
 }
 
-message EmailResponse {
+message GrpcEmailResponse {
   int32 Id = 1;
-  Sender Sender = 2;
+  GrpcSender Sender = 2;
   repeated string Recipients = 3;
   google.protobuf.Timestamp SentDate = 4;
-  EnumItem EmailStatus = 5;
+  GrpcEnumItem EmailStatus = 5;
 }

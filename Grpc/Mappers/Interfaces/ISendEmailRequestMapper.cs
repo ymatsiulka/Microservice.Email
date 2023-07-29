@@ -1,8 +1,9 @@
 ﻿using ArchitectProg.Kernel.Extensions.Mappers.Interfaces;
 using Grpc.Contracts.Email;
+using Microservice.Email.Core.Contracts.Requests;
 
 namespace Microservice.Email.Grpc.Mappers.Interfaces;
 
-public interface ISendEmailRequestMapper : IMapper<SendEmailRequest, Core.Contracts.Requests.SendEmailRequest>
+public interface ISendEmailRequestMapper : IMapper<GrpcSendEmailRequest, SendEmailRequest>
 {
 }

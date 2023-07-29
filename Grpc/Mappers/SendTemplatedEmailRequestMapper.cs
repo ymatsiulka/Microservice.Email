@@ -1,17 +1,18 @@
 ﻿using ArchitectProg.Kernel.Extensions.Mappers;
 using Grpc.Contracts.Email;
 using Microservice.Email.Core.Contracts.Common;
+using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Grpc.Mappers.Interfaces;
 
 namespace Microservice.Email.Grpc.Mappers;
 
 public class SendTemplatedEmailRequestMapper :
-    Mapper<SendTemplatedEmailRequest, Core.Contracts.Requests.SendTemplatedEmailRequest>,
+    Mapper<GrpcSendTemplatedEmailRequest, SendTemplatedEmailRequest>,
     ISendTemplatedEmailRequestMapper
 {
-    public override Core.Contracts.Requests.SendTemplatedEmailRequest Map(SendTemplatedEmailRequest source)
+    public override SendTemplatedEmailRequest Map(GrpcSendTemplatedEmailRequest source)
     {
-        var result = new Core.Contracts.Requests.SendTemplatedEmailRequest
+        var result = new SendTemplatedEmailRequest
         {
             TemplateName = source.TemplateName,
             TemplateProperties = source.TemplateProperties,

@@ -4,6 +4,6 @@ import "Grpc/Protos/Contracts/Email.proto";
 option csharp_namespace = "Grpc.Services";
 
 service EmailService {
-  rpc Send (SendEmailRequest) returns (EmailResponse) {}
-  rpc SendTemplated (SendTemplatedEmailRequest) returns (EmailResponse) {}
+  rpc Send (GrpcSendEmailRequest) returns (GrpcEmailResponse) {}
+  rpc SendTemplated (GrpcSendTemplatedEmailRequest) returns (GrpcEmailResponse) {}
 }
