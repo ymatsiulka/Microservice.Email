@@ -1,7 +1,7 @@
-﻿using System.Net;
-using ArchitectProg.Kernel.Extensions.Exceptions;
+﻿using ArchitectProg.Kernel.Extensions.Exceptions;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
+using Microservice.Email.Extensions;
 
 namespace Microservice.Email.Grpc.Interceptors;
 
@@ -33,12 +33,15 @@ public class ErrorHandlerInterceptor : Interceptor
 
     private static RpcException GetRpcException(StatusCode statusCode, Exception exception)
     {
-        var message = WebUtility.UrlEncode(exception.Message);
-        var stackTrace = WebUtility.UrlEncode(exception.StackTrace ?? string.Empty);
+        var message = exception.Message.StripUnicodeCharacters();
+        var stackTrace = exception.StackTrace.StripUnicodeCharacters();
+        var exceptionType = exception.GetType().Name;
+
         var metadata = new Metadata
         {
-            { "message", message },
-            { "stackTrace", stackTrace }
+            { nameof(exceptionType), exceptionType },
+            { nameof(exception.Message), message },
+            { nameof(exception.StackTrace), stackTrace }
         };
 
         var result = new RpcException(new Status(statusCode, statusCode.ToString()), metadata);
