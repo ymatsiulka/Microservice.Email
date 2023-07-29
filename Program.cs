@@ -28,19 +28,31 @@ using Microservice.Email.Smtp;
 using Microservice.Email.Smtp.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddGrpc(x =>
 {
     x.Interceptors.Add<ErrorHandlerInterceptor>();
     x.EnableDetailedErrors = true;
-});
+}).AddJsonTranscoding();
 
+builder.Services.AddGrpcSwagger();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("grpc",
+        new OpenApiInfo { Title = "gRpc API", Version = "grpc" });
+    c.SwaggerDoc("rest",
+     new OpenApiInfo { Title = "REST API", Version = "rest" });
+
+    var filePath = Path.Combine(System.AppContext.BaseDirectory, "Microservice.Email.xml");
+    c.IncludeXmlComments(filePath);
+    c.IncludeGrpcXmlComments(filePath, includeControllerXmlComments: true);
+});
 builder.Services.AddGrpcReflection();
 builder.Services.AddScoped<ISendEmailRequestMapper, SendEmailRequestMapper>();
 builder.Services.AddScoped<ISendTemplatedEmailRequestMapper, SendTemplatedEmailRequestMapper>();
@@ -114,7 +126,12 @@ var app = builder.Build();
 app.ApplyMigrations();
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/grpc/swagger.json", "gRpc API");
+    c.SwaggerEndpoint("/swagger/rest/swagger.json", "REST API");
+});
+
 app.UseCors(policy =>
 {
     var corsOrigins = configuration

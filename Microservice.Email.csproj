@@ -8,6 +8,8 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileContext>.</DockerfileContext>
         <PreserveCompilationContext>true</PreserveCompilationContext>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>CS1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,6 +20,7 @@
         <PackageReference Include="Grpc.AspNetCore" Version="2.55.0" />
         <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.55.0" />
         <PackageReference Include="HtmlSanitizer" Version="8.0.645" />
+        <PackageReference Include="Microsoft.AspNetCore.Grpc.Swagger" Version="0.3.9" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Polly" Version="7.2.4" />
@@ -35,12 +38,11 @@
 
     <ItemGroup>
         <None Remove="Grpc\Protos\Contracts\Common.proto" />
+        <None Remove="Grpc\Protos\EmailService.proto" />
         <Protobuf Include="Grpc\Protos\Contracts\Common.proto" />
         <None Remove="Grpc\Protos\Contracts\Email.proto" />
         <Protobuf Include="Grpc\Protos\Contracts\Email.proto" />
-        <None Remove="Grpc\Protos\EmailService.proto" />
-        <Protobuf Include="Grpc\Protos\EmailService.proto" />
         <None Remove="Grpc\Protos\ApplicationService.proto" />
+        <Protobuf Include="Grpc\Protos\EmailService.proto" />
     </ItemGroup>
-
 </Project>

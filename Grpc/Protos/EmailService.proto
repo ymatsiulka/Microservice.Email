@@ -1,9 +1,19 @@
 ﻿syntax = "proto3";
+import "google/api/annotations.proto";
 import "Grpc/Protos/Contracts/Email.proto";
 
 option csharp_namespace = "Grpc.Services";
 
 service EmailService {
-  rpc Send (GrpcSendEmailRequest) returns (GrpcEmailResponse) {}
-  rpc SendTemplated (GrpcSendTemplatedEmailRequest) returns (GrpcEmailResponse) {}
+  rpc Send (GrpcSendEmailRequest) returns (GrpcEmailResponse) {
+	option (google.api.http) = {
+		post: "/grpc/send"
+	};
+  }
+  rpc SendTemplated (GrpcSendTemplatedEmailRequest) returns (GrpcEmailResponse) 
+  {
+	option (google.api.http) = {
+		post: "/grpc/sendTemplated"
+	};
+  }
 }

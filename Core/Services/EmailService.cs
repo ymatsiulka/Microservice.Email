@@ -12,10 +12,10 @@ namespace Microservice.Email.Core.Services;
 public class EmailService : IEmailService
 {
     private readonly ISendEmailService sendEmailService;
-    private readonly IRabbitMQPublisher rabbitMQPublisher;
     private readonly ITemplatedEmailService templatedEmailService;
     private readonly ISendEmailRequestValidator sendEmailRequestValidator;
     private readonly ISendTemplatedEmailRequestValidator sendTemplatedEmailRequestValidator;
+    
     public EmailService(
         ISendEmailService sendEmailService,
         IRabbitMQPublisher rabbitMQPublisher,
@@ -24,7 +24,6 @@ public class EmailService : IEmailService
         ISendTemplatedEmailRequestValidator sendTemplatedEmailRequestValidator)
     {
         this.sendEmailService = sendEmailService;
-        this.rabbitMQPublisher = rabbitMQPublisher;
         this.templatedEmailService = templatedEmailService;
         this.sendEmailRequestValidator = sendEmailRequestValidator;
         this.sendTemplatedEmailRequestValidator = sendTemplatedEmailRequestValidator;
@@ -39,8 +38,6 @@ public class EmailService : IEmailService
         }
 
         var result = await sendEmailService.Send(request);
-        var message = new EmailSentMessage { Exchange = "email", Queue = "sent-email-queue", Payload = result.ValueOrDefault };
-        await rabbitMQPublisher.Publish(message);
         return result;
     }
 

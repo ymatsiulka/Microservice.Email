@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Microservice.Email.Controllers;
 
 [ApiController]
+[ApiExplorerSettings(GroupName = "rest")]
 [Route("api/email")]
 public sealed class EmailController : ControllerBase
 {
