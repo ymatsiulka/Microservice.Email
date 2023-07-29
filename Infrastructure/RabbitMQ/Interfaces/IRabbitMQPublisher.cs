@@ -1,4 +1,6 @@
-﻿namespace Microservice.Email.Infrastructure.RabbitMQ.Interfaces;
+﻿using Microservice.Email.Infrastructure.RabbitMQ.Messages.Base;
+
+namespace Microservice.Email.Infrastructure.RabbitMQ.Interfaces;
 
 public interface IRabbitMQPublisher
 {

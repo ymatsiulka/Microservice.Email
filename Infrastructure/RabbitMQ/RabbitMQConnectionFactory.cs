@@ -18,9 +18,9 @@ public sealed class RabbitMQConnectionFactory : IRabbitMQConnectionFactory
         var connectionFactory = new ConnectionFactory()
         {
             HostName = rabbitMQSettings.Host,
-            Port = rabbitMQSettings.Port,
             UserName = rabbitMQSettings.Username,
             Password = rabbitMQSettings.Password,
+            VirtualHost = "/",
             DispatchConsumersAsync = true
         };
 

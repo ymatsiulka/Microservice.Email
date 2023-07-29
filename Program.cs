@@ -22,6 +22,8 @@ using Microservice.Email.Grpc.Mappers;
 using Microservice.Email.Grpc.Mappers.Interfaces;
 using Microservice.Email.Grpc.Services;
 using Microservice.Email.Infrastructure.Persistence;
+using Microservice.Email.Infrastructure.RabbitMQ;
+using Microservice.Email.Infrastructure.RabbitMQ.Handlers;
 using Microservice.Email.Smtp;
 using Microservice.Email.Smtp.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +45,6 @@ builder.Services.AddGrpcReflection();
 builder.Services.AddScoped<ISendEmailRequestMapper, SendEmailRequestMapper>();
 builder.Services.AddScoped<ISendTemplatedEmailRequestMapper, SendTemplatedEmailRequestMapper>();
 builder.Services.AddScoped<IEmailResponseMapper, EmailResponseMapper>();
-
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(new BadRequestOnExceptionFilter(typeof(ValidationException)));
@@ -70,7 +71,6 @@ builder.Services.AddControllers(options =>
 builder.Services.AddKernelExtensions();
 builder.Services.AddFunctionalExtensions();
 builder.Services.AddEfCoreRepository();
-builder.Services.AddRabbitMQ();
 builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
 builder.Services.AddScoped<IHtmlSanitizationService, HtmlSanitizationService>();
 builder.Services.AddScoped<ITemplatedEmailService, TemplatedEmailService>();
@@ -98,7 +98,15 @@ builder.Services.AddScoped<ISender>(x =>
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(RetryPolicySettings)));
 builder.Services.Configure<SmtpSettings>(configuration.GetSection(nameof(SmtpSettings)));
+builder.Services.Configure<RabbitMQSettings>(configuration.GetSection(nameof(RabbitMQSettings)));
 
+builder.Services.AddMessageHandler<SendEmailMessageHandler>();
+builder.Services.AddRabbitMQBusMessage(messageBusBuilder =>
+{
+    messageBusBuilder
+        .RegisterExchange("email")
+            .RegisterHandler<SendEmailMessageHandler>("sent-email-queue");
+});
 builder.Services.AddFluentEmail("default_sender@admin.com");
 
 var app = builder.Build();
