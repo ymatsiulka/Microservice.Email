@@ -1,10 +1,10 @@
-﻿using ArchitectProg.Persistence.EfCore.PostgreSQL.Settings;
+﻿using System.Reflection;
+using ArchitectProg.Persistence.EfCore.PostgreSQL.Settings;
 using Microservice.Email.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Reflection;
 
-namespace Microservice.Email.Persistence;
+namespace Microservice.Email.Infrastructure.Persistence;
 
 public sealed class ApplicationDatabaseContext : DbContext
 {

@@ -8,6 +8,11 @@ namespace Microservice.Email.Extensions;
 
 public static class ResultExtensions
 {
+    public static T GetOrThrow<T>(this Result<T> result)
+    {
+        return result.Match(x => x, x => throw x);
+    }
+
     public static IActionResult MatchActionResult<T>(
         this Result<T> result,
         Func<T?, IActionResult> actionResult)

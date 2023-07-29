@@ -1,17 +1,8 @@
 ﻿syntax = "proto3";
 import "google/protobuf/timestamp.proto";
+import "Grpc/Protos/Contracts/Common.proto";
 
-option csharp_namespace = "Grpc.EmailService";
-
-service EmailService {
-  rpc Send (SendEmailRequest) returns (EmailSendResponse) {}
-  rpc SendTemplated (SendTemplatedEmailRequest) returns (EmailSendResponse) {}
-}
-
-message Sender {
-  string Name = 1;
-  string Email = 2;
-}
+option csharp_namespace = "Grpc.Contracts.Email";
 
 message SendEmailRequest {
   Sender Sender = 1;
@@ -27,12 +18,7 @@ message SendTemplatedEmailRequest {
   string TemplateProperties = 4;
 }
 
-message EnumItem {
-  int32 Value = 1;
-  string Name = 2;
-}
-
-message EmailSendResponse {
+message EmailResponse {
   int32 Id = 1;
   Sender Sender = 2;
   repeated string Recipients = 3;

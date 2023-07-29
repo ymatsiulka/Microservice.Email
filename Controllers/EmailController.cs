@@ -19,7 +19,7 @@ public sealed class EmailController : ControllerBase
     }
 
     [ProducesBadRequest]
-    [ProducesOk(typeof(EmailSendResponse))]
+    [ProducesOk(typeof(EmailResponse))]
     [HttpPost("send")]
     public async Task<IActionResult> Send([FromForm] SendEmailRequest request)
     {
@@ -29,7 +29,7 @@ public sealed class EmailController : ControllerBase
     }
 
     [ProducesBadRequest]
-    [ProducesOk(typeof(EmailSendResponse))]
+    [ProducesOk(typeof(EmailResponse))]
     [HttpPost("send/templated")]
     public async Task<IActionResult> SendTemplatedEmail([FromForm] SendTemplatedEmailRequest request)
     {

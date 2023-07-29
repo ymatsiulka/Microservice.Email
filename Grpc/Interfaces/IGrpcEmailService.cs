@@ -5,6 +5,6 @@ namespace Microservice.Email.Grpc.Interfaces;
 
 public interface IGrpcEmailService
 {
-    Task<EmailSendResponse> Send(SendEmailRequest request);
-    Task<EmailSendResponse> SendTemplated(SendTemplatedEmailRequest request);
+    Task<EmailResponse> Send(SendEmailRequest request);
+    Task<EmailResponse> SendTemplated(SendTemplatedEmailRequest request);
 }

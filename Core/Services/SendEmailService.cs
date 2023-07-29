@@ -40,7 +40,7 @@ public sealed class SendEmailService : ISendEmailService
         this.emailMapper = emailMapper;
     }
 
-    public async Task<Result<EmailSendResponse>> Send(SendEmailRequest request)
+    public async Task<Result<EmailResponse>> Send(SendEmailRequest request)
     {
         var email = emailFactory.GetEmail(request);
 
@@ -48,7 +48,7 @@ public sealed class SendEmailService : ISendEmailService
         var emailResponse = await policy.ExecuteAsync(async () => await email.SendAsync());
 
         if (!emailResponse.Successful)
-            return resultFactory.Failure<EmailSendResponse>(new EmailSendException(emailResponse.ErrorMessages));
+            return resultFactory.Failure<EmailResponse>(new EmailSendException(emailResponse.ErrorMessages));
 
         var emailEntity = emailEntityFactory.Create(request);
         using (var transaction = unitOfWorkFactory.BeginTransaction())

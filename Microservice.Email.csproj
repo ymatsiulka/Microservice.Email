@@ -13,9 +13,10 @@
     <ItemGroup>
         <PackageReference Include="ArchitectProg.FunctionalExtensions" Version="2.2.7" />
         <PackageReference Include="ArchitectProg.WebApi.Extensions" Version="2.0.3" />
-        <PackageReference Include="ArchitectProg.Persistence.EfCore.PostgreSQL" Version="1.0.3" />
+        <PackageReference Include="ArchitectProg.Persistence.EfCore.PostgreSQL" Version="1.0.4" />
         <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.55.0" />
+        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.55.0" />
         <PackageReference Include="HtmlSanitizer" Version="8.0.645" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -30,6 +31,15 @@
         <None Include="Templates\Template.html">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Grpc\Protos\Contracts\Common.proto" />
+        <Protobuf Include="Grpc\Protos\Contracts\Common.proto" />
+        <None Remove="Grpc\Protos\Contracts\Email.proto" />
+        <Protobuf Include="Grpc\Protos\Contracts\Email.proto" />
+        <None Remove="Grpc\Protos\EmailService.proto" />
+        <Protobuf Include="Grpc\Protos\EmailService.proto" />
     </ItemGroup>
 
 </Project>

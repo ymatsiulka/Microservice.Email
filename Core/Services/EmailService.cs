@@ -26,7 +26,7 @@ public class EmailService : IEmailService
         this.sendTemplatedEmailRequestValidator = sendTemplatedEmailRequestValidator;
     }
 
-    public async Task<Result<EmailSendResponse>> Send(SendEmailRequest request)
+    public async Task<Result<EmailResponse>> Send(SendEmailRequest request)
     {
         var errors = sendEmailRequestValidator.Validate(request).ToArray();
         if (errors.Any())
@@ -39,7 +39,7 @@ public class EmailService : IEmailService
         return result;
     }
 
-    public async Task<Result<EmailSendResponse>> SendTemplated(SendTemplatedEmailRequest request)
+    public async Task<Result<EmailResponse>> SendTemplated(SendTemplatedEmailRequest request)
     {
         var errors = sendTemplatedEmailRequestValidator.Validate(request).ToArray();
         if (errors.Any())

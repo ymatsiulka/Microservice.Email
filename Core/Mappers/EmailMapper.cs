@@ -7,7 +7,7 @@ using Microservice.Email.Domain.Entities;
 
 namespace Microservice.Email.Core.Mappers;
 
-public sealed class EmailMapper : Mapper<EmailEntity, EmailSendResponse>, IEmailMapper
+public sealed class EmailMapper : Mapper<EmailEntity, EmailResponse>, IEmailMapper
 {
     private readonly IEnumItemFactory enumItemFactory;
 
@@ -16,7 +16,7 @@ public sealed class EmailMapper : Mapper<EmailEntity, EmailSendResponse>, IEmail
         this.enumItemFactory = enumItemFactory;
     }
 
-    public override EmailSendResponse Map(EmailEntity source)
+    public override EmailResponse Map(EmailEntity source)
     {
         var sender = new Sender
         {
@@ -24,7 +24,7 @@ public sealed class EmailMapper : Mapper<EmailEntity, EmailSendResponse>, IEmail
             Name = source.SenderName
         };
 
-        var result = new EmailSendResponse
+        var result = new EmailResponse
         {
             Id = source.Id,
             EmailStatus = enumItemFactory.GetEnumItem(source.EmailStatus),

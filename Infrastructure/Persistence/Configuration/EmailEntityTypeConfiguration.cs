@@ -3,7 +3,7 @@ using Microservice.Email.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Microservice.Email.Persistence.Configuration;
+namespace Microservice.Email.Infrastructure.Persistence.Configuration;
 
 public sealed class EmailEntityTypeConfiguration : IEntityTypeConfiguration<EmailEntity>
 {

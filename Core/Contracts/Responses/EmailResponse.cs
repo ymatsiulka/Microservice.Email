@@ -3,7 +3,7 @@ using Microservice.Email.Core.Contracts.Common;
 
 namespace Microservice.Email.Core.Contracts.Responses;
 
-public sealed class EmailSendResponse
+public sealed class EmailResponse
 {
     public int Id { get; set; }
     public required Sender Sender { get; init; }
