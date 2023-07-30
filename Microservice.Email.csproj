@@ -13,9 +13,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="App.Metrics.AspNetCore" Version="4.3.0" />
+        <PackageReference Include="App.Metrics.AspNetCore.Endpoints" Version="4.3.0" />
+        <PackageReference Include="App.Metrics.AspNetCore.Tracking" Version="4.3.0" />
+        <PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.3.0" />
         <PackageReference Include="ArchitectProg.FunctionalExtensions" Version="2.2.8" />
         <PackageReference Include="ArchitectProg.WebApi.Extensions" Version="2.0.3" />
         <PackageReference Include="ArchitectProg.Persistence.EfCore.PostgreSQL" Version="1.0.4" />
+        <PackageReference Include="Castle.Core" Version="5.1.1" />
         <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.55.0" />
         <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.55.0" />

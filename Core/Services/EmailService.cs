@@ -1,5 +1,6 @@
 ﻿using ArchitectProg.Kernel.Extensions.Exceptions;
 using ArchitectProg.Kernel.Extensions.Utils;
+using Microservice.Email.Core.Attributes;
 using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Contracts.Responses;
 using Microservice.Email.Core.Services.Interfaces;
@@ -17,7 +18,6 @@ public class EmailService : IEmailService
     
     public EmailService(
         ISendEmailService sendEmailService,
-        IRabbitMQPublisher rabbitMQPublisher,
         ITemplatedEmailService templatedEmailService,
         ISendEmailRequestValidator sendEmailRequestValidator,
         ISendTemplatedEmailRequestValidator sendTemplatedEmailRequestValidator)
@@ -28,6 +28,7 @@ public class EmailService : IEmailService
         this.sendTemplatedEmailRequestValidator = sendTemplatedEmailRequestValidator;
     }
 
+    [CounterMetric("Send email")]
     public async Task<Result<EmailResponse>> Send(SendEmailRequest request)
     {
         var errors = sendEmailRequestValidator.Validate(request).ToArray();
@@ -39,7 +40,8 @@ public class EmailService : IEmailService
         var result = await sendEmailService.Send(request);
         return result;
     }
-
+    
+    [CounterMetric("Send templated email")]
     public async Task<Result<EmailResponse>> SendTemplated(SendTemplatedEmailRequest request)
     {
         var errors = sendTemplatedEmailRequestValidator.Validate(request).ToArray();

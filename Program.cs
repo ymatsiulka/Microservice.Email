@@ -1,3 +1,5 @@
+using App.Metrics.AspNetCore;
+using App.Metrics.Formatters.Prometheus;
 using ArchitectProg.FunctionalExtensions;
 using ArchitectProg.Kernel.Extensions;
 using ArchitectProg.Kernel.Extensions.Exceptions;
@@ -26,6 +28,7 @@ using Microservice.Email.Infrastructure.Persistence;
 using Microservice.Email.Infrastructure.RabbitMQ;
 using Microservice.Email.Infrastructure.RabbitMQ.Handlers;
 using Microservice.Email.Infrastructure.RabbitMQ.Interfaces;
+using Microservice.Email.Interceptors.Metrics;
 using Microservice.Email.Smtp;
 using Microservice.Email.Smtp.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +36,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseMetricsWebTracking();
+builder.Host.UseMetrics(options =>
+{
+    options.EndpointOptions = endpointOptions =>
+    {
+        endpointOptions.MetricsTextEndpointOutputFormatter = new MetricsPrometheusTextOutputFormatter();
+        endpointOptions.MetricsEndpointOutputFormatter = new MetricsPrometheusProtobufOutputFormatter();
+        endpointOptions.EnvironmentInfoEndpointEnabled = false;
+    };
+});
+
 var configuration = builder.Configuration;
 
 builder.Services.AddEndpointsApiExplorer();
@@ -85,6 +99,9 @@ builder.Services.AddControllers(options =>
 builder.Services.AddKernelExtensions();
 builder.Services.AddFunctionalExtensions();
 builder.Services.AddEfCoreRepository();
+builder.Services.AddMetrics();
+builder.Services.AddMetricsTrackingMiddleware();
+
 builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
 builder.Services.AddScoped<IHtmlSanitizationService, HtmlSanitizationService>();
 builder.Services.AddScoped<ITemplatedEmailService, TemplatedEmailService>();
@@ -101,6 +118,7 @@ builder.Services.AddScoped<IBaseEmailRequestValidator, BaseEmailRequestValidator
 builder.Services.AddScoped<ISendEmailRequestValidator, SendEmailRequestValidator>();
 builder.Services.AddScoped<ISenderValidator, SenderValidator>();
 builder.Services.AddScoped<ISmtpClientProvider, SmtpClientProvider>();
+builder.Services.AddScoped<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailMessageHandler>();
 
 builder.Services.AddScoped<ISender>(x =>
 {
@@ -114,7 +132,6 @@ builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(
 builder.Services.Configure<SmtpSettings>(configuration.GetSection(nameof(SmtpSettings)));
 builder.Services.Configure<RabbitMQSettings>(configuration.GetSection(nameof(RabbitMQSettings)));
 
-builder.Services.AddTransient<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailMessageHandler>();
 builder.Services.AddRabbitMQBusMessage(messageBus =>
 {
     messageBus
@@ -123,10 +140,10 @@ builder.Services.AddRabbitMQBusMessage(messageBus =>
 });
 builder.Services.AddFluentEmail("default_sender@admin.com");
 
+builder.Services.AddInterceptorSingleton<IEmailService, EmailService, CounterMetricInterceptor>();
+
 var app = builder.Build();
-
 app.ApplyMigrations();
-
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {

@@ -49,6 +49,24 @@ services:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/data
       - ~/.docker-conf/rabbitmq/log/:/var/lib/rabbitmq/log
 
+  prometheus:
+    container_name: "prometheus"
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - ~/.docker-conf/prometheus/data/:/var/lib/prometheus/data
+      - ./.config:/etc/.config/prometheus.yml
+  grafana:
+    container_name: "grafana"
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    volumes:
+      - ~/.docker-conf/grafana/data/:/var/lib/grafana/data
+      
 volumes:
   postgres:
   pgadmin:
+  prometheus:
+  grafana:
