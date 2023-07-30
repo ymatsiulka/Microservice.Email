@@ -1,8 +1,6 @@
-﻿using RabbitMQ.Client.Events;
+﻿namespace Microservice.Email.Infrastructure.RabbitMQ.Interfaces;
 
-namespace Microservice.Email.Infrastructure.RabbitMQ.Interfaces;
-
-public interface IRabbitMQMessageHandler
+public interface IRabbitMQMessageHandler<TPayload> where TPayload : class
 {
-    Task Handle(BasicDeliverEventArgs args);
+    Task Handle(TPayload payload);
 }

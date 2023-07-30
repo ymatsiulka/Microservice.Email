@@ -31,15 +31,4 @@ public static class DependencyInjectionExtensions
 
         return serviceCollection;
     }
-
-    public static IServiceCollection AddMessageHandler<TMessageHandler>(this IServiceCollection serviceCollection)
-    where TMessageHandler : class, IRabbitMQMessageHandler
-    {
-        if (serviceCollection is null)
-            throw new ArgumentNullException(nameof(serviceCollection));
-
-        serviceCollection.AddScoped<TMessageHandler>();
-
-        return serviceCollection;
-    }
 }

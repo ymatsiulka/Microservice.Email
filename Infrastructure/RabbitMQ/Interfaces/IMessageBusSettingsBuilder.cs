@@ -3,6 +3,9 @@
 public interface IMessageBusSettingsBuilder
 {
     IMessageBusSettingsBuilder RegisterExchange(string name);
-    IMessageBusSettingsBuilder RegisterHandler<THandlerType>(string queueName) where THandlerType : IRabbitMQMessageHandler;
+    IMessageBusSettingsBuilder RegisterHandler<THandlerType, TPayload>(string queueName)
+        where TPayload : class
+        where THandlerType : IRabbitMQMessageHandler<TPayload>;
+
     BusSettings Build();
 }

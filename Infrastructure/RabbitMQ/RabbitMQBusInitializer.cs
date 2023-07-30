@@ -1,5 +1,9 @@
-﻿using Microservice.Email.Infrastructure.RabbitMQ.Interfaces;
+﻿using Microservice.Email.Core.Contracts.Requests;
+using Microservice.Email.Extensions;
+using Microservice.Email.Infrastructure.RabbitMQ.Interfaces;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
+using System.Reflection;
 using Consumer = RabbitMQ.Client.Events.AsyncEventingBasicConsumer;
 using Handler = RabbitMQ.Client.Events.AsyncEventHandler<RabbitMQ.Client.Events.BasicDeliverEventArgs>;
 
@@ -40,13 +44,23 @@ public class RabbitMQBusInitializer : IHostedService, IDisposable
                 channel.QueueDeclare(queue.Name, exclusive: false, autoDelete: false);
                 channel.QueueBind(queue.Name, exchange.Name, queue.Name);
                 logger.LogInformation("Queue declared. Name: {Name}", queue.Name);
-                if (serviceProvider.GetRequiredService(queue.HandlerType) is not IRabbitMQMessageHandler rabbitMQMessageHandler)
-                    throw new InvalidOperationException($"Can't resolve handler of type {queue.HandlerType}.");
+                // Get the generic type parameter you want to find the implementation for (e.g., Payload)
+
+                // Find the implementation of IInterface<T> for the specified generic type
+                var messageHandler = serviceProvider
+                    .GetRequiredService(queue.HandlerType);
 
                 var consumer = new Consumer(channel);
-                Handler handler = async (_, args) => await rabbitMQMessageHandler.Handle(args);
+                Handler handler = async (_, args) =>
+                {
+
+                    dynamic message = JsonConvert.DeserializeObject(args.Body.FromBytes(),type: queue.PayloadType);
+                    // If you want to call the method SomeMethod on the implementation, you can do it like this:
+                    var someMethod = messageHandler.GetType().GetMethod("Handle");
+                    someMethod.Invoke(messageHandler, new object[] { message });
+                };
                 consumer.Received += handler;
-             
+
 
                 handlers.Add(consumer, handler);
 

@@ -7,6 +7,7 @@ using ArchitectProg.WebApi.Extensions.Filters;
 using ArchitectProg.WebApi.Extensions.Responses;
 using FluentEmail.Core.Interfaces;
 using FluentEmail.Smtp;
+using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Factories;
 using Microservice.Email.Core.Factories.Interfaces;
 using Microservice.Email.Core.Mappers;
@@ -24,6 +25,7 @@ using Microservice.Email.Grpc.Services;
 using Microservice.Email.Infrastructure.Persistence;
 using Microservice.Email.Infrastructure.RabbitMQ;
 using Microservice.Email.Infrastructure.RabbitMQ.Handlers;
+using Microservice.Email.Infrastructure.RabbitMQ.Interfaces;
 using Microservice.Email.Smtp;
 using Microservice.Email.Smtp.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -112,12 +114,12 @@ builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(
 builder.Services.Configure<SmtpSettings>(configuration.GetSection(nameof(SmtpSettings)));
 builder.Services.Configure<RabbitMQSettings>(configuration.GetSection(nameof(RabbitMQSettings)));
 
-builder.Services.AddMessageHandler<SendEmailMessageHandler>();
+builder.Services.AddTransient<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailMessageHandler>();
 builder.Services.AddRabbitMQBusMessage(messageBusBuilder =>
 {
     messageBusBuilder
         .RegisterExchange("email")
-            .RegisterHandler<SendEmailMessageHandler>("sent-email-queue");
+            .RegisterHandler<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailRequest>("sent-email-queue");
 });
 builder.Services.AddFluentEmail("default_sender@admin.com");
 
