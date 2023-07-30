@@ -1,9 +1,7 @@
-﻿using Microservice.Email.Core.Contracts.Requests;
-using Microservice.Email.Extensions;
+﻿using Microservice.Email.Extensions;
 using Microservice.Email.Infrastructure.RabbitMQ.Interfaces;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using System.Reflection;
 using Consumer = RabbitMQ.Client.Events.AsyncEventingBasicConsumer;
 using Handler = RabbitMQ.Client.Events.AsyncEventHandler<RabbitMQ.Client.Events.BasicDeliverEventArgs>;
 

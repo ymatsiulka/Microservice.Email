@@ -37,28 +37,28 @@ var configuration = builder.Configuration;
 
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddGrpcSwagger();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("grpc", new OpenApiInfo { Title = "Grpc API", Version = "grpc" });
+    options.SwaggerDoc("rest", new OpenApiInfo { Title = "REST API", Version = "rest" });
+
+    var filePath = Path.Combine(AppContext.BaseDirectory, "Microservice.Email.xml");
+    options.IncludeXmlComments(filePath);
+    options.IncludeGrpcXmlComments(filePath, includeControllerXmlComments: true);
+});
+
 builder.Services.AddGrpc(x =>
 {
     x.Interceptors.Add<ErrorHandlerInterceptor>();
     x.EnableDetailedErrors = true;
 }).AddJsonTranscoding();
 
-builder.Services.AddGrpcSwagger();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("grpc",
-        new OpenApiInfo { Title = "gRpc API", Version = "grpc" });
-    c.SwaggerDoc("rest",
-     new OpenApiInfo { Title = "REST API", Version = "rest" });
-
-    var filePath = Path.Combine(System.AppContext.BaseDirectory, "Microservice.Email.xml");
-    c.IncludeXmlComments(filePath);
-    c.IncludeGrpcXmlComments(filePath, includeControllerXmlComments: true);
-});
 builder.Services.AddGrpcReflection();
 builder.Services.AddScoped<ISendEmailRequestMapper, SendEmailRequestMapper>();
 builder.Services.AddScoped<ISendTemplatedEmailRequestMapper, SendTemplatedEmailRequestMapper>();
 builder.Services.AddScoped<IEmailResponseMapper, EmailResponseMapper>();
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(new BadRequestOnExceptionFilter(typeof(ValidationException)));
@@ -115,11 +115,11 @@ builder.Services.Configure<SmtpSettings>(configuration.GetSection(nameof(SmtpSet
 builder.Services.Configure<RabbitMQSettings>(configuration.GetSection(nameof(RabbitMQSettings)));
 
 builder.Services.AddTransient<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailMessageHandler>();
-builder.Services.AddRabbitMQBusMessage(messageBusBuilder =>
+builder.Services.AddRabbitMQBusMessage(messageBus =>
 {
-    messageBusBuilder
+    messageBus
         .RegisterExchange("email")
-            .RegisterHandler<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailRequest>("sent-email-queue");
+        .RegisterHandler<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailRequest>("sent-email-queue");
 });
 builder.Services.AddFluentEmail("default_sender@admin.com");
 
@@ -130,7 +130,7 @@ app.ApplyMigrations();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/grpc/swagger.json", "gRpc API");
+    c.SwaggerEndpoint("/swagger/grpc/swagger.json", "Grpc API");
     c.SwaggerEndpoint("/swagger/rest/swagger.json", "REST API");
 });
 
