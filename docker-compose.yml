@@ -59,14 +59,16 @@ services:
     #     target: /etc/prometheus/prometheus.yml
     volumes:
       # - ~/.docker-conf/prometheus/data/:/var/lib/prometheus/data
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./.config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
   grafana:
     container_name: "grafana"
     image: grafana/grafana:latest
     ports:
       - 3000:3000
     volumes:
-      - ~/.docker-conf/grafana/data/:/var/lib/grafana/data
+      - ./.config/grafana/provisioning:/etc/grafana/provisioning
+      - ./.config/grafana/config.ini:/etc/grafana/config.ini
+      - ./.config/grafana/dashboards:/var/lib/grafana/dashboards
       
 volumes:
   postgres:
