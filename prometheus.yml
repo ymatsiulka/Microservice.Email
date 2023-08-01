@@ -6,6 +6,8 @@ global:
   external_labels:
     monitor: 'codelab-monitor'
 
+rule_files:
+
 alerting:
   alertmanagers:
     - static_configs:
@@ -14,13 +16,7 @@ alerting:
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
 scrape_configs:
-  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
-  - job_name: 'prometheus'
-
-    # Override the global default and scrape targets from this job every 5 seconds.
-    scrape_interval: 5s
-      - targets: ['localhost:9090']
   - job_name: 'emailapi'
+    scheme: http
     static_configs:
-      - targets: ['localhost:5236']
-    metrics_path: /metrics-text
+      - targets: ['host.docker.internal:5236']
