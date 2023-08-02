@@ -137,7 +137,7 @@ builder.Services.AddRabbitMQBusMessage(messageBus =>
 {
     messageBus
         .RegisterExchange("email")
-        .RegisterHandler<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailRequest>("sent-email-queue")
+        .RegisterHandler<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailRequest>("sent-email-queue");
 });
 builder.Services.AddFluentEmail("default_sender@admin.com");
 
