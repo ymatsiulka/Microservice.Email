@@ -118,7 +118,6 @@ builder.Services.AddScoped<IBaseEmailRequestValidator, BaseEmailRequestValidator
 builder.Services.AddScoped<ISendEmailRequestValidator, SendEmailRequestValidator>();
 builder.Services.AddScoped<ISenderValidator, SenderValidator>();
 builder.Services.AddScoped<ISmtpClientProvider, SmtpClientProvider>();
-builder.Services.AddScoped<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailMessageHandler>();
 
 builder.Services.AddScoped<ISender>(x =>
 {
@@ -132,11 +131,13 @@ builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(
 builder.Services.Configure<SmtpSettings>(configuration.GetSection(nameof(SmtpSettings)));
 builder.Services.Configure<RabbitMQSettings>(configuration.GetSection(nameof(RabbitMQSettings)));
 
+builder.Services.AddScoped<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailMessageHandler>();
+
 builder.Services.AddRabbitMQBusMessage(messageBus =>
 {
     messageBus
         .RegisterExchange("email")
-        .RegisterHandler<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailRequest>("sent-email-queue");
+        .RegisterHandler<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailRequest>("sent-email-queue")
 });
 builder.Services.AddFluentEmail("default_sender@admin.com");
 

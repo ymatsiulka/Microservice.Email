@@ -25,7 +25,6 @@ public class RabbitMQBusInitializer : IHostedService, IDisposable
         serviceScope = serviceScopeFactory.CreateScope();
     }
 
-
     public Task StartAsync(CancellationToken cancellationToken)
     {
         var serviceProvider = serviceScope.ServiceProvider;
@@ -63,13 +62,13 @@ public class RabbitMQBusInitializer : IHostedService, IDisposable
                 handlers.Add(consumer, handler);
 
                 channel.BasicConsume(queue.Name, autoAck: true, consumer: consumer);
-                logger.LogInformation("Handler of type: {HandlerType} attached to queue", queue.HandlerType);
+                logger.LogInformation("Handler of type: {HandlerType} attached to queue", queue.HandlerType.CSharpName());
             }
         }
 
         return Task.CompletedTask;
     }
-
+    
     public Task StopAsync(CancellationToken cancellationToken)
     {
         foreach (var (consumer, handler) in handlers)
