@@ -1,5 +1,6 @@
 ﻿using Microservice.Email.Extensions;
 using Microservice.Email.Infrastructure.RabbitMQ.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using Consumer = RabbitMQ.Client.Events.AsyncEventingBasicConsumer;
@@ -51,7 +52,7 @@ public class RabbitMQBusInitializer : IHostedService, IDisposable
                 Handler handler = async (_, args) =>
                 {
 
-                    dynamic message = JsonConvert.DeserializeObject(args.Body.FromBytes(),type: queue.PayloadType);
+                    dynamic message = JsonConvert.DeserializeObject(args.Body.FromBytes(), type: queue.PayloadType);
                     // If you want to call the method SomeMethod on the implementation, you can do it like this:
                     var someMethod = messageHandler.GetType().GetMethod("Handle");
                     someMethod.Invoke(messageHandler, new object[] { message });
@@ -68,7 +69,7 @@ public class RabbitMQBusInitializer : IHostedService, IDisposable
 
         return Task.CompletedTask;
     }
-    
+
     public Task StopAsync(CancellationToken cancellationToken)
     {
         foreach (var (consumer, handler) in handlers)

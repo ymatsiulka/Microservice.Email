@@ -15,16 +15,12 @@ public static class DependencyInjectionExtensions
             throw new ArgumentNullException(nameof(serviceCollection));
         }
 
-        serviceCollection.AddSingleton<IMessageBusSettingsBuilder, MessageBusSettingsBuilder>();
-        serviceCollection.AddSingleton<BusSettings>(x =>
-        {
-            var builder = x.GetRequiredService<IMessageBusSettingsBuilder>();
-            configure.Invoke(builder);
+        var builder = new MessageBusSettingsBuilder();
+        configure.Invoke(builder);
+        var busSettings = builder.Build();
 
-            var settings = builder.Build();
-            return settings;
-        });
-
+        serviceCollection.AddSingleton(busSettings);
+        serviceCollection.AddScopedHandlers(busSettings);
         serviceCollection.AddScoped<IRabbitMQChannelService, RabbitMQChannelService>();
         serviceCollection.AddScoped<IRabbitMQConnectionFactory, RabbitMQConnectionFactory>();
         serviceCollection.AddScoped<IRabbitMQPublisher, RabbitMQPublisher>();
@@ -50,5 +46,12 @@ public static class DependencyInjectionExtensions
             var interceptor = provider.GetRequiredService<TInterceptor>();
             return proxyGenerator.CreateInterfaceProxyWithTarget<TInterface>(impl, interceptor);
         });
+    }
+
+    private static void AddScopedHandlers(this IServiceCollection serviceCollection, BusSettings busSettings)
+    {
+        foreach (var exchange in busSettings.Exchanges)
+            foreach (var queue in exchange.Queues)
+                serviceCollection.AddScoped(queue.HandlerType, queue.HandlerImplementationType);
     }
 }

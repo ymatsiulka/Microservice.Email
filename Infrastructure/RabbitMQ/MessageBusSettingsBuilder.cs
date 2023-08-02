@@ -22,8 +22,9 @@ public sealed class MessageBusSettingsBuilder : IMessageBusSettingsBuilder
         return this;
     }
 
-    public IMessageBusSettingsBuilder RegisterHandler<THandlerType, TPayloadType>(string queueName)
+    public IMessageBusSettingsBuilder RegisterHandler<THandlerType, THandlerImplementationType, TPayloadType>(string queueName)
         where TPayloadType : class
+        where THandlerImplementationType : class
         where THandlerType : IRabbitMQMessageHandler<TPayloadType>
     {
         if (queueName.IsNullOrWhiteSpace())
@@ -33,6 +34,7 @@ public sealed class MessageBusSettingsBuilder : IMessageBusSettingsBuilder
         {
             Name = queueName,
             HandlerType = typeof(THandlerType),
+            HandlerImplementationType = typeof(THandlerImplementationType),
             PayloadType = typeof(TPayloadType)
         };
 
