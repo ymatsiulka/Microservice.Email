@@ -3,7 +3,7 @@ using App.Metrics.Counter;
 using Castle.DynamicProxy;
 using Microservice.Email.Core.Attributes;
 
-namespace Microservice.Email.Interceptors.Metrics;
+namespace Microservice.Email.Core.Interceptors.Metrics;
 
 public sealed class CounterMetricInterceptor : IInterceptor
 {

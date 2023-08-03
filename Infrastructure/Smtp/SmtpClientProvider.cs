@@ -1,10 +1,10 @@
-﻿using ArchitectProg.FunctionalExtensions.Extensions;
-using Microservice.Email.Smtp.Interfaces;
-using Microsoft.Extensions.Options;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
+using ArchitectProg.FunctionalExtensions.Extensions;
+using Microservice.Email.Infrastructure.Smtp.Interfaces;
+using Microsoft.Extensions.Options;
 
-namespace Microservice.Email.Smtp;
+namespace Microservice.Email.Infrastructure.Smtp;
 
 public sealed class SmtpClientProvider : ISmtpClientProvider
 {

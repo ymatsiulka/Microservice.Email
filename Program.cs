@@ -12,6 +12,7 @@ using FluentEmail.Smtp;
 using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Factories;
 using Microservice.Email.Core.Factories.Interfaces;
+using Microservice.Email.Core.Interceptors.Metrics;
 using Microservice.Email.Core.Mappers;
 using Microservice.Email.Core.Mappers.Interfaces;
 using Microservice.Email.Core.Services;
@@ -28,9 +29,8 @@ using Microservice.Email.Infrastructure.Messaging.Handlers;
 using Microservice.Email.Infrastructure.Messaging.Interfaces;
 using Microservice.Email.Infrastructure.Messaging.Settings;
 using Microservice.Email.Infrastructure.Persistence;
-using Microservice.Email.Interceptors.Metrics;
-using Microservice.Email.Smtp;
-using Microservice.Email.Smtp.Interfaces;
+using Microservice.Email.Infrastructure.Smtp;
+using Microservice.Email.Infrastructure.Smtp.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -130,7 +130,7 @@ builder.Services.AddScoped<ISender>(x =>
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(RetryPolicySettings)));
 builder.Services.Configure<SmtpSettings>(configuration.GetSection(nameof(SmtpSettings)));
-builder.Services.Configure<RabbitMQSettings>(configuration.GetSection(nameof(RabbitMQSettings)));
+builder.Services.Configure<MessagingSettings>(configuration.GetSection(nameof(MessagingSettings)));
 
 builder.Services.AddRabbitMQBusMessage(messageBus =>
 {

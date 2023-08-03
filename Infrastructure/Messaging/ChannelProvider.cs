@@ -7,16 +7,16 @@ namespace Microservice.Email.Infrastructure.Messaging;
 
 public sealed class ChannelProvider : IChannelProvider
 {
-    private readonly RabbitMQSettings rabbitMQSettings;
+    private readonly MessagingSettings messagingSettings;
     private readonly Lazy<IConnection> connection;
     private readonly Lazy<IModel> channel;
     private readonly List<IModel> channels = new();
 
     public IModel Channel => channel.Value;
 
-    public ChannelProvider(IOptions<RabbitMQSettings> rabbitMQSettings)
+    public ChannelProvider(IOptions<MessagingSettings> messagingSettings)
     {
-        this.rabbitMQSettings = rabbitMQSettings.Value;
+        this.messagingSettings = messagingSettings.Value;
 
         connection = new Lazy<IConnection>(GetConnection, LazyThreadSafetyMode.ExecutionAndPublication);
         channel = new Lazy<IModel>(CreateChannel, LazyThreadSafetyMode.ExecutionAndPublication);
@@ -26,10 +26,10 @@ public sealed class ChannelProvider : IChannelProvider
     {
         var connectionFactory = new ConnectionFactory
         {
-            HostName = rabbitMQSettings.Host,
-            Port = rabbitMQSettings.Port,
-            UserName = rabbitMQSettings.Username,
-            Password = rabbitMQSettings.Password,
+            HostName = messagingSettings.Host,
+            Port = messagingSettings.Port,
+            UserName = messagingSettings.Username,
+            Password = messagingSettings.Password,
             DispatchConsumersAsync = true,
             VirtualHost = "/"
         };
