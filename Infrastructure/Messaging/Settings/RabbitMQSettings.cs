@@ -1,4 +1,4 @@
-﻿namespace Microservice.Email.Infrastructure.RabbitMQ;
+﻿namespace Microservice.Email.Infrastructure.Messaging.Settings;
 
 public class RabbitMQSettings
 {

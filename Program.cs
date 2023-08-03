@@ -24,10 +24,10 @@ using Microservice.Email.Grpc.Interceptors;
 using Microservice.Email.Grpc.Mappers;
 using Microservice.Email.Grpc.Mappers.Interfaces;
 using Microservice.Email.Grpc.Services;
+using Microservice.Email.Infrastructure.Messaging.Handlers;
+using Microservice.Email.Infrastructure.Messaging.Interfaces;
+using Microservice.Email.Infrastructure.Messaging.Settings;
 using Microservice.Email.Infrastructure.Persistence;
-using Microservice.Email.Infrastructure.RabbitMQ;
-using Microservice.Email.Infrastructure.RabbitMQ.Handlers;
-using Microservice.Email.Infrastructure.RabbitMQ.Interfaces;
 using Microservice.Email.Interceptors.Metrics;
 using Microservice.Email.Smtp;
 using Microservice.Email.Smtp.Interfaces;
@@ -107,6 +107,7 @@ builder.Services.AddScoped<IHtmlSanitizationService, HtmlSanitizationService>();
 builder.Services.AddScoped<ITemplatedEmailService, TemplatedEmailService>();
 builder.Services.AddScoped<ISendEmailService, SendEmailService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddInterceptedScoped<IEmailService, EmailService, CounterMetricInterceptor>();
 builder.Services.AddScoped<IRetryPolicyFactory, RetryPolicyFactory>();
 builder.Services.AddScoped<IEmailEntityFactory, EmailEntityFactory>();
 builder.Services.AddScoped<IAttachmentFactory, AttachmentFactory>();
@@ -135,11 +136,12 @@ builder.Services.AddRabbitMQBusMessage(messageBus =>
 {
     messageBus
         .RegisterExchange("email")
-        .RegisterHandler<IRabbitMQMessageHandler<SendEmailRequest>, SendEmailMessageHandler, SendEmailRequest>("sent-email-queue");
+        .RegisterHandler<IMessageHandler<SendEmailRequest>, SendEmailMessageHandler>("sent-email-queue")
+        .RegisterExchange("templated-email")
+        .RegisterHandler<IMessageHandler<SendTemplatedEmailRequest>, SendTemplatedEmailMessageHandler>("sent-templated-email-queue");
 });
-builder.Services.AddFluentEmail("default_sender@admin.com");
 
-builder.Services.AddInterceptorSingleton<IEmailService, EmailService, CounterMetricInterceptor>();
+builder.Services.AddFluentEmail("default_sender@admin.com");
 
 var app = builder.Build();
 app.ApplyMigrations();

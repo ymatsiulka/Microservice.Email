@@ -5,7 +5,6 @@ using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Contracts.Responses;
 using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Core.Validators.Interfaces;
-using Microservice.Email.Infrastructure.RabbitMQ.Interfaces;
 
 namespace Microservice.Email.Core.Services;
 
