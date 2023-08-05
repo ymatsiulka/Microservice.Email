@@ -21,8 +21,6 @@ public sealed class CoreModule : IModule
 {
     public void RegisterDependencies(WebApplicationBuilder builder)
     {
-        builder.Services.AddInterceptedScoped<IEmailService, EmailService, CounterMetricInterceptor>();
-
         builder.Services.AddScoped<IHtmlSanitizationService, HtmlSanitizationService>();
         builder.Services.AddScoped<ITemplatedEmailService, TemplatedEmailService>();
         builder.Services.AddScoped<ISendEmailService, SendEmailService>();
@@ -44,8 +42,11 @@ public sealed class CoreModule : IModule
         builder.Services.AddScoped<IAddressFactory, AddressFactory>();
         builder.Services.AddScoped<IEmailFactory, EmailFactory>();
 
+
         builder.Services.AddKernelExtensions();
         builder.Services.AddFunctionalExtensions();
+        
+        builder.Services.AddInterceptedScoped<IEmailService, EmailService, CounterMetricInterceptor>();
 
         var configuration = builder.Configuration;
         builder.Services.Configure<RetryPolicySettings>(configuration.GetSection(nameof(RetryPolicySettings)));

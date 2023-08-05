@@ -2,12 +2,12 @@ using Microservice.Email.Extensions;
 using Microservice.Email.Grpc.Services;
 using Microservice.Email.Modules;
 using Microservice.Email.Modules.Interfaces;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var modules = new IModule[]
 {
-    new MetricsModule(),
     new ApiModule(),
     new PersistenceModule(),
     new CoreModule(),
@@ -42,8 +42,11 @@ app.UseCors(policy =>
             .AllowAnyMethod();
 });
 
+app.MapControllers();
 app.UseHttpsRedirection();
 app.MapGrpcService<GrpcEmailService>();
 app.MapGrpcReflectionService();
-app.MapControllers();
+
+app.UseMetricServer();
+app.UseHttpMetrics();
 app.Run();

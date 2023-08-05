@@ -3,10 +3,12 @@
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public class CounterMetricAttribute : Attribute
 {
-    public string MetricName { get; }
+    public string Name { get; }
+    public string Help { get; }
 
-    public CounterMetricAttribute(string metricName)
+    public CounterMetricAttribute(string name, string help)
     {
-        MetricName = metricName;
+        Name = name;
+        Help = help;
     }
 }

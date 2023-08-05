@@ -18,6 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
+  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -77,13 +78,78 @@
             "uid": "PABF2E7BD7AE7B0F4"
           },
           "editorMode": "builder",
-          "expr": "emailapi_send_email",
+          "expr": "send_email",
           "instant": false,
           "range": true,
           "refId": "A"
         }
       ],
       "title": "Send email",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PABF2E7BD7AE7B0F4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PABF2E7BD7AE7B0F4"
+          },
+          "editorMode": "builder",
+          "expr": "send_email_error",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Send email errors",
       "type": "stat"
     },
     {
@@ -114,7 +180,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 9,
         "w": 4,
         "x": 0,
         "y": 9
@@ -142,13 +208,78 @@
             "uid": "PABF2E7BD7AE7B0F4"
           },
           "editorMode": "builder",
-          "expr": "emailapi_send_templated_email",
+          "expr": "send_templated_email",
           "instant": false,
           "range": true,
           "refId": "A"
         }
       ],
       "title": "Send templated emails",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PABF2E7BD7AE7B0F4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 4,
+        "x": 4,
+        "y": 9
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PABF2E7BD7AE7B0F4"
+          },
+          "editorMode": "builder",
+          "expr": "send_templated_email_error",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Send template email errors",
       "type": "stat"
     }
   ],
@@ -167,6 +298,6 @@
   "timezone": "",
   "title": "Microservice.Email",
   "uid": "f4a5e975-2f3b-4e9b-b3a9-e9d5669961ee",
-  "version": 1,
+  "version": 4,
   "weekStart": ""
 }

@@ -27,7 +27,7 @@ public class EmailService : IEmailService
         this.sendTemplatedEmailRequestValidator = sendTemplatedEmailRequestValidator;
     }
 
-    [CounterMetric("Send email")]
+    [CounterMetric("send_email", "Number of sent emails")]
     public async Task<Result<EmailResponse>> Send(SendEmailRequest request)
     {
         var errors = sendEmailRequestValidator.Validate(request).ToArray();
@@ -40,7 +40,7 @@ public class EmailService : IEmailService
         return result;
     }
     
-    [CounterMetric("Send templated email")]
+    [CounterMetric("send_templated_email", "Number of sent templated emails")]
     public async Task<Result<EmailResponse>> SendTemplated(SendTemplatedEmailRequest request)
     {
         var errors = sendTemplatedEmailRequestValidator.Validate(request).ToArray();

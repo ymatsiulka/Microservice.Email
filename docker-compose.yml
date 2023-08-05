@@ -60,6 +60,8 @@ services:
     volumes:
       # - ~/.docker-conf/prometheus/data/:/var/lib/prometheus/data
       - ./.config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+      
   grafana:
     container_name: "grafana"
     image: grafana/grafana:latest
@@ -73,5 +75,5 @@ services:
 volumes:
   postgres:
   pgadmin:
-  prometheus:
+  prometheus-data:
   grafana:
