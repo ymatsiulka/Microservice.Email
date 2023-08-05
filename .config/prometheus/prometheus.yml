@@ -16,7 +16,12 @@ alerting:
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
 scrape_configs:
+
+  - job_name: 'prometheus'
+    scrape_interval: '5s'
+    static_configs:
+      - targets: ['localhost:9090']
+
   - job_name: 'emailapi'
-    scheme: http
     static_configs:
       - targets: ['host.docker.internal:5236']

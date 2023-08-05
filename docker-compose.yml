@@ -54,11 +54,7 @@ services:
     image: prom/prometheus:latest
     ports:
       - 9090:9090
-    # configs:
-    #   - source: prometheus_config
-    #     target: /etc/prometheus/prometheus.yml
     volumes:
-      # - ~/.docker-conf/prometheus/data/:/var/lib/prometheus/data
       - ./.config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
       
