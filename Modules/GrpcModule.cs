@@ -15,16 +15,6 @@ public sealed class GrpcModule : IModule
         }).AddJsonTranscoding();
 
         builder.Services.AddGrpcReflection();
-        
         builder.Services.AddGrpcSwagger();
-        builder.Services.AddSwaggerGen(options =>
-        {
-            options.SwaggerDoc("grpc", new OpenApiInfo { Title = "Grpc API", Version = "grpc" });
-            options.SwaggerDoc("rest", new OpenApiInfo { Title = "REST API", Version = "rest" });
-
-            var filePath = Path.Combine(AppContext.BaseDirectory, "Microservice.Email.xml");
-            options.IncludeXmlComments(filePath);
-            options.IncludeGrpcXmlComments(filePath, includeControllerXmlComments: true);
-        });
     }
 }

@@ -49,4 +49,8 @@
         <None Remove="Grpc\Protos\ApplicationService.proto" />
         <Protobuf Include="Grpc\Protos\EmailService.proto" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Grpc\Protos\Api\" />
+    </ItemGroup>
 </Project>
