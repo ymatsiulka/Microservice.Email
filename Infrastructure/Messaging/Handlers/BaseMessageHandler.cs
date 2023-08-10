@@ -1,4 +1,5 @@
-﻿using Microservice.Email.Extensions;
+﻿using ArchitectProg.FunctionalExtensions.Extensions;
+using Microservice.Email.Extensions;
 using Microservice.Email.Infrastructure.Messaging.Interfaces;
 using RabbitMQ.Client.Events;
 
