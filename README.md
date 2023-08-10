@@ -4,7 +4,8 @@
 Microservice.Email is designed to send sanitised templated emails and personalized emails.<br>
 
 ## Features
-- Metrics Collection: The application can efficiently collect various metrics from multiple sources.
+- Sending email templates using Scriban to render body of message.
+- Metrics Collection: The application can efficiently collect various metrics.
 - Graph Visualization: It offers a built-in graphing feature to visualize the collected data in a user-friendly manner.
 - Versatile Data Transfer: Supports sending data seamlessly over REST, gRPC, and RabbitMQ event bus, providing flexibility in data delivery.
 
@@ -17,6 +18,9 @@ Microservice.Email is designed to send sanitised templated emails and personaliz
     dotnet run
     ```
 3. Open a web browser and use this link: http://localhost:5236/swagger/index.html
+
+## Database
+Todo
 
 ## Dependencies
 | Dependency    | URL                               |
