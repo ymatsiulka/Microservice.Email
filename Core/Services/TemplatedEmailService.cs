@@ -15,10 +15,12 @@ public class TemplatedEmailService : ITemplatedEmailService
     private const string TemplateDirectoryPath = "./Templates/{0}.html";
 
     private readonly IAssemblyFileReader assemblyFileReader;
+    private readonly IJsonSerializer jsonSerializer;
 
-    public TemplatedEmailService(IAssemblyFileReader assemblyFileReader)
+    public TemplatedEmailService(IAssemblyFileReader assemblyFileReader, IJsonSerializer jsonSerializer)
     {
         this.assemblyFileReader = assemblyFileReader;
+        this.jsonSerializer = jsonSerializer;
     }
     
     public async Task<SendEmailRequest> ProcessTemplatedRequest(SendTemplatedEmailRequest request)
@@ -34,7 +36,7 @@ public class TemplatedEmailService : ITemplatedEmailService
         }
 
         var properties = request.TemplateProperties ?? string.Empty;
-        var model = properties.Deserialize<ExpandoObject>();
+        var model = jsonSerializer.Deserialize<ExpandoObject>(properties);
 
         var body = await template.RenderAsync(new { model }, property => property.Name.ToLower());
         var subject = GetSubject(body);

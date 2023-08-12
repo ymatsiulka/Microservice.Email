@@ -1,4 +1,5 @@
-﻿using Microservice.Email.Core.Contracts.Requests;
+﻿using ArchitectProg.FunctionalExtensions.Services.Interfaces;
+using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Services.Interfaces;
 
 namespace Microservice.Email.Infrastructure.Messaging.Handlers;
@@ -9,7 +10,8 @@ public sealed class SendTemplatedEmailMessageHandler : BaseMessageHandler<SendTe
 
     public SendTemplatedEmailMessageHandler(
         ILogger<SendTemplatedEmailMessageHandler> logger,
-        IEmailService emailService) : base(logger)
+        IEmailService emailService,
+        IJsonSerializer jsonSerializer) : base(logger, jsonSerializer)
     {
         this.emailService = emailService;
     }
