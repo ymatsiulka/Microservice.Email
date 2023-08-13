@@ -20,7 +20,11 @@ Microservice.Email is designed to send sanitised templated emails and personaliz
 3. Open a web browser and use this link: http://localhost:5236/swagger/index.html
 
 ## Database
-Todo
+### ERD Scheme PostgreSQL
+![PostgreSQL scheme](.docs/database/erd_scheme_postgresql.png)
+
+### ERD Scheme Vuerd
+![Vuerd scheme](.docs/database/erd_scheme_vuerd.png)
 
 ## Dependencies
 | Dependency    | URL                               |

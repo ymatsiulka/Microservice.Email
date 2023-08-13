@@ -3,9 +3,9 @@
     "version": "2.2.11",
     "width": 2000,
     "height": 2000,
-    "scrollTop": -533.3333333333335,
-    "scrollLeft": -592.0052083333336,
-    "zoomLevel": 0.8,
+    "scrollTop": -534.6666666666669,
+    "scrollLeft": -594.6718750000002,
+    "zoomLevel": 0.9,
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -140,7 +140,7 @@
           },
           {
             "name": "Recipients",
-            "comment": "We will store as json",
+            "comment": "Store as json",
             "dataType": "VARCHAR(8000)",
             "default": "",
             "option": {
@@ -155,7 +155,7 @@
               "fk": false,
               "pfk": false,
               "widthName": 62.6962890625,
-              "widthComment": 120,
+              "widthComment": 77.87353515625,
               "widthDataType": 102.1787109375,
               "widthDefault": 60
             },
@@ -209,10 +209,10 @@
           }
         ],
         "ui": {
-          "active": true,
-          "left": 857.0567,
+          "active": false,
+          "left": 862.9825,
           "top": 729.4609,
-          "zIndex": 147,
+          "zIndex": 159,
           "widthName": 60,
           "widthComment": 120
         },
