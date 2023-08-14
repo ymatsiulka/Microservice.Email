@@ -1,20 +1,11 @@
 using Microservice.Email.Extensions;
 using Microservice.Email.Grpc.Services;
-using Microservice.Email.Modules;
 using Microservice.Email.Modules.Interfaces;
 using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var modules = new IModule[]
-{
-    new ApiModule(),
-    new PersistenceModule(),
-    new CoreModule(),
-    new BusModule(),
-    new GrpcModule(),
-    new SmtpModule(),
-};
+var modules = ReflectionExtensions.FindImplementationsOfTypeInExecutingAssembly<IModule>();
 
 foreach (var module in modules)
     module.RegisterDependencies(builder);
