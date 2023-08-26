@@ -9,7 +9,7 @@ public static class ReflectionExtensions
         var interfaceType = typeof(T);
         var currentAssembly = Assembly.GetExecutingAssembly();
 
-        T[] implementations = currentAssembly.GetTypes()
+        var implementations = currentAssembly.GetTypes()
             .Where(type => interfaceType.IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
             .Select(Activator.CreateInstance)
             .OfType<T>()

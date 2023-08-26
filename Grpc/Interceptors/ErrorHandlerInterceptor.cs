@@ -5,7 +5,7 @@ using Microservice.Email.Extensions;
 
 namespace Microservice.Email.Grpc.Interceptors;
 
-public class ErrorHandlerInterceptor : Interceptor
+public sealed class ErrorHandlerInterceptor : Interceptor
 {
     public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
         TRequest request,

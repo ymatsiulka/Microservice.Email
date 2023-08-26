@@ -1,6 +1,5 @@
 ﻿using Microservice.Email.Grpc.Interceptors;
 using Microservice.Email.Modules.Interfaces;
-using Microsoft.OpenApi.Models;
 
 namespace Microservice.Email.Modules;
 

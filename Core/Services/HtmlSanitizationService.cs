@@ -3,7 +3,7 @@ using Microservice.Email.Core.Services.Interfaces;
 
 namespace Microservice.Email.Core.Services;
 
-public class HtmlSanitizationService : IHtmlSanitizationService
+public sealed class HtmlSanitizationService : IHtmlSanitizationService
 {
     private readonly HtmlSanitizer sanitizer;
 

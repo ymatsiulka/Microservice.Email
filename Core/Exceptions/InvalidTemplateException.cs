@@ -1,6 +1,6 @@
 ﻿namespace Microservice.Email.Core.Exceptions;
 
-public class InvalidTemplateException : Exception
+public sealed class InvalidTemplateException : Exception
 {
     private const string ErrorMessage =
         "Attempting to use an invalid template. TemplatePath: {0}. Errors: {1}";

@@ -4,7 +4,7 @@ using Microservice.Email.Extensions;
 
 namespace Microservice.Email.Core.Validators;
 
-public class SenderValidator : ISenderValidator
+public sealed class SenderValidator : ISenderValidator
 {
     public IEnumerable<string> Validate(Sender sender)
     {

@@ -6,7 +6,7 @@ using Microservice.Email.Grpc.Mappers.Interfaces;
 
 namespace Microservice.Email.Grpc.Mappers;
 
-public class SendEmailRequestMapper :
+public sealed class SendEmailRequestMapper :
     Mapper<GrpcSendEmailRequest, SendEmailRequest>,
     ISendEmailRequestMapper
 {

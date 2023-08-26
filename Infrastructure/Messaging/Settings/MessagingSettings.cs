@@ -1,6 +1,6 @@
 ﻿namespace Microservice.Email.Infrastructure.Messaging.Settings;
 
-public class MessagingSettings
+public sealed class MessagingSettings
 {
     public required string Host { get; init; }
     public required int Port { get; init; }

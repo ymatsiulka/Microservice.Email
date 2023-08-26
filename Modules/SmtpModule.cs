@@ -2,6 +2,7 @@
 using FluentEmail.Smtp;
 using Microservice.Email.Infrastructure.Smtp;
 using Microservice.Email.Infrastructure.Smtp.Interfaces;
+using Microservice.Email.Infrastructure.Smtp.Settings;
 using Microservice.Email.Modules.Interfaces;
 
 namespace Microservice.Email.Modules;

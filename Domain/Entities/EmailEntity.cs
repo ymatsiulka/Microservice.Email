@@ -3,7 +3,7 @@ using Microservice.Email.Domain.Enums;
 
 namespace Microservice.Email.Domain.Entities;
 
-public class EmailEntity : Entity<int>
+public sealed class EmailEntity : Entity<int>
 {
     public required string Body { get; init; }
     public required string Subject { get; init; }

@@ -5,7 +5,7 @@ using Microservice.Email.Core.Services.Interfaces;
 
 namespace Microservice.Email.Core.Factories;
 
-public class EmailFactory : IEmailFactory
+public sealed class EmailFactory : IEmailFactory
 {
     private readonly IHtmlSanitizationService htmlSanitizationService;
     private readonly IAttachmentFactory attachmentFactory;

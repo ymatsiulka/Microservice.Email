@@ -2,7 +2,7 @@
 
 namespace Microservice.Email.Core.Exceptions;
 
-public class EmailSendException : Exception
+public sealed class EmailSendException : Exception
 {
     public EmailSendException(IEnumerable<string> errorMessages)
         : base(string.Join(GenericConstants.Space, errorMessages))

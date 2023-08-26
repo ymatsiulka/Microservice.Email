@@ -3,7 +3,7 @@ using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Factories.Interfaces;
 using Microservice.Email.Domain.Entities;
 using Microservice.Email.Domain.Enums;
-using Microservice.Email.Infrastructure.Smtp;
+using Microservice.Email.Infrastructure.Smtp.Settings;
 using Microsoft.Extensions.Options;
 
 namespace Microservice.Email.Core.Factories;

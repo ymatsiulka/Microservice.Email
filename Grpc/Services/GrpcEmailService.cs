@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Microservice.Email.Grpc.Services;
 
 [ApiExplorerSettings(GroupName = "grpc")]
-public class GrpcEmailService : EmailService.EmailServiceBase
+public sealed class GrpcEmailService : EmailService.EmailServiceBase
 {
     private readonly IEmailService emailService;
     private readonly IEmailResponseMapper emailResponseMapper;

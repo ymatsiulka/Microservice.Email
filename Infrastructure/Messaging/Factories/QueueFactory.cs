@@ -4,7 +4,7 @@ using RabbitMQ.Client;
 
 namespace Microservice.Email.Infrastructure.Messaging.Factories;
 
-public class QueueFactory : IQueueFactory
+public sealed class QueueFactory : IQueueFactory
 {
     private const string DeadLetterExchangeFormat = "{0}-dead-letter";
 

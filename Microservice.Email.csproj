@@ -41,15 +41,10 @@
 
     <ItemGroup>
         <None Remove="Grpc\Protos\Contracts\Common.proto" />
-        <None Remove="Grpc\Protos\EmailService.proto" />
         <Protobuf Include="Grpc\Protos\Contracts\Common.proto" />
         <None Remove="Grpc\Protos\Contracts\Email.proto" />
         <Protobuf Include="Grpc\Protos\Contracts\Email.proto" />
-        <None Remove="Grpc\Protos\ApplicationService.proto" />
+        <None Remove="Grpc\Protos\EmailService.proto" />
         <Protobuf Include="Grpc\Protos\EmailService.proto" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Grpc\Protos\Api\" />
     </ItemGroup>
 </Project>

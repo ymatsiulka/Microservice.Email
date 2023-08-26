@@ -6,7 +6,7 @@ using RabbitMQ.Client.Events;
 
 namespace Microservice.Email.Infrastructure.Messaging.Factories;
 
-public class HandlerFactory : IHandlerFactory
+public sealed class HandlerFactory : IHandlerFactory
 {
     private readonly IServiceScopeFactory serviceScopeFactory;
     private readonly ILogger<HandlerFactory> logger;

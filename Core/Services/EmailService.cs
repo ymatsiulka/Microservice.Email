@@ -8,7 +8,7 @@ using Microservice.Email.Core.Validators.Interfaces;
 
 namespace Microservice.Email.Core.Services;
 
-public class EmailService : IEmailService
+public sealed class EmailService : IEmailService
 {
     private readonly ISendEmailService sendEmailService;
     private readonly ITemplatedEmailService templatedEmailService;

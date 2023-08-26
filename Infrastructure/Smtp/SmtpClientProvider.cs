@@ -2,6 +2,7 @@
 using System.Net.Mail;
 using ArchitectProg.FunctionalExtensions.Extensions;
 using Microservice.Email.Infrastructure.Smtp.Interfaces;
+using Microservice.Email.Infrastructure.Smtp.Settings;
 using Microsoft.Extensions.Options;
 
 namespace Microservice.Email.Infrastructure.Smtp;

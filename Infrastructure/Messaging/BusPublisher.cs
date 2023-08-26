@@ -19,8 +19,6 @@ public sealed class BusPublisher : IBusPublisher
 
     public Task Publish<T>(BusMessage<T> message)
     {
-        ArgumentNullException.ThrowIfNullOrEmpty(nameof(message.Exchange));
-
         var body = jsonSerializer.Serialize(message.Payload).ToBytes();
 
         var channel = channelFactory.Channel;

@@ -7,7 +7,7 @@ using Microservice.Email.Grpc.Mappers.Interfaces;
 
 namespace Microservice.Email.Grpc.Mappers;
 
-public class EmailResponseMapper :
+public sealed class EmailResponseMapper :
     Mapper<EmailResponse, GrpcEmailResponse>,
     IEmailResponseMapper
 {

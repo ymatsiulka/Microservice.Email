@@ -4,11 +4,10 @@ using Microservice.Email.Core.Services.Interfaces;
 using Scriban;
 using System.Dynamic;
 using Microservice.Email.Core.Contracts.Requests;
-using Microservice.Email.Extensions;
 
 namespace Microservice.Email.Core.Services;
 
-public class TemplatedEmailService : ITemplatedEmailService
+public sealed class TemplatedEmailService : ITemplatedEmailService
 {
     private const string TitleOpenTag = "<title>";
     private const string TitleCloseTag = "</title>";

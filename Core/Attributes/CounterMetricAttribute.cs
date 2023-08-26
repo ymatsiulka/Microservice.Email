@@ -1,7 +1,7 @@
 ﻿namespace Microservice.Email.Core.Attributes;
 
-[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-public class CounterMetricAttribute : Attribute
+[AttributeUsage(AttributeTargets.Method)]
+public sealed class CounterMetricAttribute : Attribute
 {
     public string Name { get; }
     public string Help { get; }

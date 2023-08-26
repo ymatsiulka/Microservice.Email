@@ -1,6 +1,6 @@
-﻿namespace Microservice.Email.Infrastructure.Smtp;
+﻿namespace Microservice.Email.Infrastructure.Smtp.Settings;
 
-public class SmtpSettings
+public sealed class SmtpSettings
 {
     public required string Host { get; init; }
     public required int Port { get; init; }

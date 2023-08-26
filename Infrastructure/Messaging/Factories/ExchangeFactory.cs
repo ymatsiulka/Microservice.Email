@@ -4,7 +4,7 @@ using RabbitMQ.Client;
 
 namespace Microservice.Email.Infrastructure.Messaging.Factories;
 
-public class ExchangeFactory : IExchangeFactory
+public sealed class ExchangeFactory : IExchangeFactory
 {
     private readonly ILogger<ExchangeFactory> logger;
 
