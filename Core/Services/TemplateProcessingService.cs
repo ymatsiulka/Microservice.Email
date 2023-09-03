@@ -3,11 +3,13 @@ using Microservice.Email.Core.Exceptions;
 using Microservice.Email.Core.Services.Interfaces;
 using Scriban;
 using System.Dynamic;
+using Microservice.Email.Core.Contracts.Common;
 using Microservice.Email.Core.Contracts.Requests;
+using Newtonsoft.Json;
 
 namespace Microservice.Email.Core.Services;
 
-public sealed class TemplatedEmailService : ITemplatedEmailService
+public sealed class TemplateProcessingService : ITemplateProcessingService
 {
     private const string TitleOpenTag = "<title>";
     private const string TitleCloseTag = "</title>";
@@ -16,13 +18,13 @@ public sealed class TemplatedEmailService : ITemplatedEmailService
     private readonly IAssemblyFileReader assemblyFileReader;
     private readonly IJsonSerializer jsonSerializer;
 
-    public TemplatedEmailService(IAssemblyFileReader assemblyFileReader, IJsonSerializer jsonSerializer)
+    public TemplateProcessingService(IAssemblyFileReader assemblyFileReader, IJsonSerializer jsonSerializer)
     {
         this.assemblyFileReader = assemblyFileReader;
         this.jsonSerializer = jsonSerializer;
     }
-    
-    public async Task<SendEmailRequest> ProcessTemplatedRequest(SendTemplatedEmailRequest request)
+
+    public async Task<EmailContent> Process(SendTemplatedEmailRequest request)
     {
         var templatePath = string.Format(TemplateDirectoryPath, request.TemplateName);
         var templateText = assemblyFileReader.GetFileFromCurrentAssembly(templatePath);
@@ -35,16 +37,13 @@ public sealed class TemplatedEmailService : ITemplatedEmailService
         }
 
         var properties = request.TemplateProperties ?? string.Empty;
-        var model = jsonSerializer.Deserialize<ExpandoObject>(properties);
+        var model = JsonConvert.DeserializeObject<ExpandoObject>(properties);
 
         var body = await template.RenderAsync(new { model }, property => property.Name.ToLower());
         var subject = GetSubject(body);
 
-        var result = new SendEmailRequest
+        var result = new EmailContent
         {
-            Sender = request.Sender,
-            Recipients = request.Recipients,
-            Attachments = request.Attachments,
             Subject = subject,
             Body = body
         };

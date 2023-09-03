@@ -4,6 +4,7 @@ using ArchitectProg.WebApi.Extensions.Responses;
 using Microservice.Email.Modules.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using Minio.Exceptions;
 
 namespace Microservice.Email.Modules;
 
@@ -18,6 +19,7 @@ public sealed class ApiModule : IModule
             options.Filters.Add(new BadRequestOnExceptionFilter(typeof(InvalidOperationException)));
             options.Filters.Add(new BadRequestOnExceptionFilter(typeof(ArgumentNullException)));
             options.Filters.Add(new NotFoundOnExceptionFilter(typeof(ResourceNotFoundException)));
+            options.Filters.Add(new NotFoundOnExceptionFilter(typeof(ObjectNotFoundException)));
         })
         .ConfigureApiBehaviorOptions(options =>
         {

@@ -15,9 +15,9 @@ public sealed class BusModule : IModule
         {
             messageBus
                 .RegisterExchange("email")
-                .RegisterHandler<IMessageHandler<SendEmailRequest>, SendEmailMessageHandler>("sent-email-queue")
+                .RegisterHandler<IMessageHandler<AttachmentsWrapper<SendEmailRequest>>, SendEmailMessageHandler>("sent-email-queue")
                 .RegisterExchange("templated-email")
-                .RegisterHandler<IMessageHandler<SendTemplatedEmailRequest>, SendTemplatedEmailMessageHandler>("sent-templated-email-queue");
+                .RegisterHandler<IMessageHandler<AttachmentsWrapper<SendTemplatedEmailRequest>>, SendTemplatedEmailMessageHandler>("sent-templated-email-queue");
         });
 
         var configuration = builder.Configuration;

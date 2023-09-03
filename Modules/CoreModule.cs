@@ -11,8 +11,6 @@ using Microservice.Email.Core.Settings;
 using Microservice.Email.Core.Validators;
 using Microservice.Email.Core.Validators.Interfaces;
 using Microservice.Email.Extensions;
-using Microservice.Email.Grpc.Mappers;
-using Microservice.Email.Grpc.Mappers.Interfaces;
 using Microservice.Email.Modules.Interfaces;
 
 namespace Microservice.Email.Modules;
@@ -21,27 +19,24 @@ public sealed class CoreModule : IModule
 {
     public void RegisterDependencies(WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<IHtmlSanitizationService, HtmlSanitizationService>();
-        builder.Services.AddScoped<ITemplatedEmailService, TemplatedEmailService>();
+        builder.Services.AddScoped<ITemplateProcessingService, TemplateProcessingService>();
         builder.Services.AddScoped<ISendEmailService, SendEmailService>();
         builder.Services.AddScoped<IEmailService, EmailService>();
 
+        builder.Services.AddScoped<IFormFileAttachmentsValidator, FormFileAttachmentsValidator>();
+        builder.Services.AddScoped<IAttachmentsValidator, AttachmentsValidator>();
         builder.Services.AddScoped<ISendTemplatedEmailRequestValidator, SendTemplatedEmailRequestValidator>();
         builder.Services.AddScoped<IBaseEmailRequestValidator, BaseEmailRequestValidator>();
         builder.Services.AddScoped<ISendEmailRequestValidator, SendEmailRequestValidator>();
         builder.Services.AddScoped<ISenderValidator, SenderValidator>();
 
-        builder.Services.AddScoped<ISendTemplatedEmailRequestMapper, SendTemplatedEmailRequestMapper>();
-        builder.Services.AddScoped<ISendEmailRequestMapper, SendEmailRequestMapper>();
-        builder.Services.AddScoped<IEmailResponseMapper, EmailResponseMapper>();
         builder.Services.AddScoped<IEmailMapper, EmailMapper>();
+        builder.Services.AddScoped<IAttachmentMapper, AttachmentMapper>();
 
+        builder.Services.AddScoped<ISendEmailArgsFactory, SendEmailArgsFactory>();
         builder.Services.AddScoped<IRetryPolicyFactory, RetryPolicyFactory>();
         builder.Services.AddScoped<IEmailEntityFactory, EmailEntityFactory>();
-        builder.Services.AddScoped<IAttachmentFactory, AttachmentFactory>();
         builder.Services.AddScoped<IAddressFactory, AddressFactory>();
-        builder.Services.AddScoped<IEmailFactory, EmailFactory>();
-
 
         builder.Services.AddKernelExtensions();
         builder.Services.AddFunctionalExtensions();

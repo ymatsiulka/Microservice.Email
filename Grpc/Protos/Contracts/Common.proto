@@ -11,3 +11,7 @@ message GrpcEnumItem {
   int32 Id = 1;
   string Name = 2;
 }
+
+message GrpcAttachment {
+  string FileName = 1;
+}

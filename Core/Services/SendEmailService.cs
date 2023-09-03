@@ -2,19 +2,20 @@
 using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.Kernel.Extensions.Utils;
 using FluentEmail.Core.Models;
-using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Contracts.Responses;
 using Microservice.Email.Core.Exceptions;
 using Microservice.Email.Core.Factories.Interfaces;
 using Microservice.Email.Core.Mappers.Interfaces;
 using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Domain.Entities;
+using Microservice.Email.Infrastructure.Smtp.Contracts;
+using Microservice.Email.Infrastructure.Smtp.Interfaces;
 
 namespace Microservice.Email.Core.Services;
 
 public sealed class SendEmailService : ISendEmailService
 {
-    private readonly IEmailFactory emailFactory;
+    private readonly IEmailSender emailSender;
     private readonly IResultFactory resultFactory;
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
     private readonly IRepository<EmailEntity> emailRepository;
@@ -23,7 +24,7 @@ public sealed class SendEmailService : ISendEmailService
     private readonly IRetryPolicyFactory retryPolicyFactory;
 
     public SendEmailService(
-        IEmailFactory emailFactory,
+        IEmailSender emailSender,
         IResultFactory resultFactory,
         IUnitOfWorkFactory unitOfWorkFactory,
         IRepository<EmailEntity> emailRepository,
@@ -31,7 +32,7 @@ public sealed class SendEmailService : ISendEmailService
         IRetryPolicyFactory retryPolicyFactory,
         IEmailMapper emailMapper)
     {
-        this.emailFactory = emailFactory;
+        this.emailSender = emailSender;
         this.resultFactory = resultFactory;
         this.unitOfWorkFactory = unitOfWorkFactory;
         this.emailRepository = emailRepository;
@@ -40,17 +41,15 @@ public sealed class SendEmailService : ISendEmailService
         this.emailMapper = emailMapper;
     }
 
-    public async Task<Result<EmailResponse>> Send(SendEmailRequest request)
+    public async Task<Result<EmailResponse>> Send(SendEmailArgs args)
     {
-        var email = emailFactory.GetEmail(request);
-
         var policy = retryPolicyFactory.GetPolicy<SendResponse>();
-        var emailResponse = await policy.ExecuteAsync(async () => await email.SendAsync());
+        var sendResponse = await policy.ExecuteAsync(async () => await emailSender.Send(args));
 
-        if (!emailResponse.Successful)
-            return resultFactory.Failure<EmailResponse>(new EmailSendException(emailResponse.ErrorMessages));
+        if (!sendResponse.Successful)
+            return resultFactory.Failure<EmailResponse>(new EmailSendException(sendResponse.ErrorMessages));
 
-        var emailEntity = emailEntityFactory.Create(request);
+        var emailEntity = emailEntityFactory.Create(args);
         using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
             await emailRepository.Add(emailEntity);

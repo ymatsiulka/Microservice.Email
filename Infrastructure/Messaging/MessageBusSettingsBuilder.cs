@@ -30,7 +30,7 @@ public sealed class MessageBusSettingsBuilder : IMessageBusSettingsBuilder
         string queueName,
         Action<QueueProperties>? configureProperties = null)
         where THandler : IMessageHandler
-        where TImplementation : IMessageHandler
+        where TImplementation : IMessageHandler, THandler
     {
         if (queueName.IsNullOrWhiteSpace())
             throw new ArgumentNullException(nameof(queueName));

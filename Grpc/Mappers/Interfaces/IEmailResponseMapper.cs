@@ -1,4 +1,4 @@
-﻿using ArchitectProg.Kernel.Extensions.Mappers.Interfaces;
+﻿using ArchitectProg.Kernel.Extensions.Mappers;
 using Grpc.Contracts.Email;
 using Microservice.Email.Core.Contracts.Responses;
 

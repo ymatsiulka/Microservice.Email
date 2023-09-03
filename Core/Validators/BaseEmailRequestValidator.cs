@@ -31,13 +31,5 @@ public sealed class BaseEmailRequestValidator : IBaseEmailRequestValidator
             var invalidEmails = string.Join(", ", invalidRecipients);
             yield return $"Invalid recipients found. Invalid emails: {invalidEmails}";
         }
-
-        if (request.Attachments is not null)
-        {
-            //file size should not exceed 30mb
-            var haveInvalidAttachments = request.Attachments.Any(attachment => attachment.Length > 30000000 );
-            if (haveInvalidAttachments)
-                yield return "Attachments size must be lower than 30mb";
-        }
     }
 }

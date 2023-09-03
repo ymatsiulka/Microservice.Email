@@ -22,7 +22,7 @@ public sealed class EmailController : ControllerBase
     [ProducesBadRequest]
     [ProducesOk(typeof(EmailResponse))]
     [HttpPost("send")]
-    public async Task<IActionResult> Send([FromForm] SendEmailRequest request)
+    public async Task<IActionResult> Send(AttachmentsWrapper<SendEmailRequest> request)
     {
         var result = await emailService.Send(request);
         var response = result.MatchActionResult(Ok);
@@ -32,9 +32,29 @@ public sealed class EmailController : ControllerBase
     [ProducesBadRequest]
     [ProducesOk(typeof(EmailResponse))]
     [HttpPost("send/templated")]
-    public async Task<IActionResult> SendTemplatedEmail([FromForm] SendTemplatedEmailRequest request)
+    public async Task<IActionResult> SendTemplatedEmail(AttachmentsWrapper<SendTemplatedEmailRequest> request)
     {
         var result = await emailService.SendTemplated(request);
+        var response = result.MatchActionResult(Ok);
+        return response;
+    }
+
+    [ProducesBadRequest]
+    [ProducesOk(typeof(EmailResponse))]
+    [HttpPost("send/formFiles")]
+    public async Task<IActionResult> Send([FromForm] FormFilesWrapper<SendEmailRequest> request)
+    {
+        var result = await emailService.SendWithFormFiles(request);
+        var response = result.MatchActionResult(Ok);
+        return response;
+    }
+
+    [ProducesBadRequest]
+    [ProducesOk(typeof(EmailResponse))]
+    [HttpPost("send/templated/formFiles")]
+    public async Task<IActionResult> SendTemplatedEmail([FromForm] FormFilesWrapper<SendTemplatedEmailRequest> request)
+    {
+        var result = await emailService.SendTemplatedWithFormFiles(request);
         var response = result.MatchActionResult(Ok);
         return response;
     }

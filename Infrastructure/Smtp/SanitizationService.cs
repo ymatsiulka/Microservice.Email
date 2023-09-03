@@ -1,13 +1,13 @@
 ﻿using Ganss.Xss;
-using Microservice.Email.Core.Services.Interfaces;
+using Microservice.Email.Infrastructure.Smtp.Interfaces;
 
-namespace Microservice.Email.Core.Services;
+namespace Microservice.Email.Infrastructure.Smtp;
 
-public sealed class HtmlSanitizationService : IHtmlSanitizationService
+public sealed class SanitizationService : ISanitizationService
 {
     private readonly HtmlSanitizer sanitizer;
 
-    public HtmlSanitizationService()
+    public SanitizationService()
     {
         sanitizer = new HtmlSanitizer();
         sanitizer.AllowedAttributes.Add("class");

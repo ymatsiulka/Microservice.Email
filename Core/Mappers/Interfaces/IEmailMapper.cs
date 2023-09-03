@@ -1,4 +1,4 @@
-﻿using ArchitectProg.Kernel.Extensions.Mappers.Interfaces;
+﻿using ArchitectProg.Kernel.Extensions.Mappers;
 using Microservice.Email.Core.Contracts.Responses;
 using Microservice.Email.Domain.Entities;
 

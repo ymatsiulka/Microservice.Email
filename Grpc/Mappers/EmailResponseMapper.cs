@@ -1,5 +1,4 @@
-﻿using ArchitectProg.Kernel.Extensions.Mappers;
-using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Contracts.Common;
 using Grpc.Contracts.Email;
 using Microservice.Email.Core.Contracts.Responses;
@@ -7,11 +6,9 @@ using Microservice.Email.Grpc.Mappers.Interfaces;
 
 namespace Microservice.Email.Grpc.Mappers;
 
-public sealed class EmailResponseMapper :
-    Mapper<EmailResponse, GrpcEmailResponse>,
-    IEmailResponseMapper
+public sealed class EmailResponseMapper : IEmailResponseMapper
 {
-    public override GrpcEmailResponse Map(EmailResponse source)
+    public GrpcEmailResponse Map(EmailResponse source)
     {
         var result = new GrpcEmailResponse
         {

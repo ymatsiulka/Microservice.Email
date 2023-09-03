@@ -42,9 +42,9 @@ services:
       - RABBITMQ_DEFAULT_PASS=rabbit
     ports:
       # RabbitMQ instance
-      - 5672:5672
+      - "5672:5672"
       # Web interface
-      - 15672:15672
+      - "15672:15672"
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/data
       - ~/.docker-conf/rabbitmq/log/:/var/lib/rabbitmq/log
@@ -53,7 +53,7 @@ services:
     container_name: "prometheus"
     image: prom/prometheus:latest
     ports:
-      - 9090:9090
+      - "9090:9090"
     volumes:
       - ./.config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
@@ -65,14 +65,27 @@ services:
     container_name: "grafana"
     image: grafana/grafana:latest
     ports:
-      - 3000:3000
+      - "3000:3000"
     volumes:
       - ./.config/grafana/provisioning:/etc/grafana/provisioning
       - ./.config/grafana/config.ini:/etc/grafana/config.ini
       - ./.config/grafana/dashboards:/var/lib/grafana/dashboards
-      
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    volumes:
+      - minio_storage:/data
+    command: server --console-address ":9001" /data
+
 volumes:
   postgres:
   pgadmin:
   prometheus-data:
   grafana:
+  minio_storage:

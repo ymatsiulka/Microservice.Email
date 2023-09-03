@@ -4,7 +4,7 @@ using Microservice.Email.Core.Services.Interfaces;
 
 namespace Microservice.Email.Infrastructure.Messaging.Handlers;
 
-public sealed class SendTemplatedEmailMessageHandler : BaseMessageHandler<SendTemplatedEmailRequest>
+public sealed class SendTemplatedEmailMessageHandler : BaseMessageHandler<AttachmentsWrapper<SendTemplatedEmailRequest>>
 {
     private readonly IEmailService emailService;
 
@@ -16,7 +16,7 @@ public sealed class SendTemplatedEmailMessageHandler : BaseMessageHandler<SendTe
         this.emailService = emailService;
     }
 
-    public override async Task Handle(SendTemplatedEmailRequest payload)
+    public override async Task Handle(AttachmentsWrapper<SendTemplatedEmailRequest> payload)
     {
         await emailService.SendTemplated(payload);
     }

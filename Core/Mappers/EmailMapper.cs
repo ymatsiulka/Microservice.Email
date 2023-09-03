@@ -1,5 +1,4 @@
 ﻿using ArchitectProg.FunctionalExtensions.Factories.Interfaces;
-using ArchitectProg.Kernel.Extensions.Mappers;
 using Microservice.Email.Core.Contracts.Common;
 using Microservice.Email.Core.Contracts.Responses;
 using Microservice.Email.Core.Mappers.Interfaces;
@@ -7,7 +6,7 @@ using Microservice.Email.Domain.Entities;
 
 namespace Microservice.Email.Core.Mappers;
 
-public sealed class EmailMapper : Mapper<EmailEntity, EmailResponse>, IEmailMapper
+public sealed class EmailMapper : IEmailMapper
 {
     private readonly IEnumItemFactory enumItemFactory;
 
@@ -16,7 +15,7 @@ public sealed class EmailMapper : Mapper<EmailEntity, EmailResponse>, IEmailMapp
         this.enumItemFactory = enumItemFactory;
     }
 
-    public override EmailResponse Map(EmailEntity source)
+    public EmailResponse Map(EmailEntity source)
     {
         var sender = new Sender
         {

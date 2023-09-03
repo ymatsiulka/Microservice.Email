@@ -14,7 +14,7 @@ public static class ResultExtensions
         return response;
     }
 
-    public static IActionResult MatchActionResult<T>(this Result<T> result, Func<T?, IActionResult> actionResult)
+    public static IActionResult MatchActionResult<T>(this Result<T> result, Func<T, IActionResult> actionResult)
     {
         var response = result.Match(actionResult, x => MatchException(x));
         return response;

@@ -1,8 +1,8 @@
 ﻿using ArchitectProg.FunctionalExtensions.Services.Interfaces;
-using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Factories.Interfaces;
 using Microservice.Email.Domain.Entities;
 using Microservice.Email.Domain.Enums;
+using Microservice.Email.Infrastructure.Smtp.Contracts;
 using Microservice.Email.Infrastructure.Smtp.Settings;
 using Microsoft.Extensions.Options;
 
@@ -21,17 +21,17 @@ public sealed class EmailEntityFactory : IEmailEntityFactory
         this.smtpSettings = smtpSettings.Value;
     }
 
-    public EmailEntity Create(SendEmailRequest request)
+    public EmailEntity Create(SendEmailArgs args)
     {
         var defaultSender = smtpSettings.Host;
         var result = new EmailEntity
         {
             EmailStatus = EmailStatus.Sent,
-            Recipients = request.Recipients,
-            Subject = request.Subject,
-            SenderName = request.Sender?.Name ?? defaultSender,
-            SenderEmail = request.Sender?.Email ?? defaultSender,
-            Body = request.Body,
+            Recipients = args.Recipients,
+            Subject = args.Subject,
+            SenderName = args.Sender?.Name ?? defaultSender,
+            SenderEmail = args.Sender?.Email ?? defaultSender,
+            Body = args.Body,
             SentDate = dateTimeProvider.GetUtcNow()
         };
 

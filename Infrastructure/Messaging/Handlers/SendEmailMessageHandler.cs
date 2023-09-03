@@ -4,7 +4,7 @@ using Microservice.Email.Core.Services.Interfaces;
 
 namespace Microservice.Email.Infrastructure.Messaging.Handlers;
 
-public sealed class SendEmailMessageHandler : BaseMessageHandler<SendEmailRequest>
+public sealed class SendEmailMessageHandler : BaseMessageHandler<AttachmentsWrapper<SendEmailRequest>>
 {
     private readonly IEmailService emailService;
 
@@ -15,7 +15,7 @@ public sealed class SendEmailMessageHandler : BaseMessageHandler<SendEmailReques
         this.emailService = emailService;
     }
 
-    public override async Task Handle(SendEmailRequest payload)
+    public override async Task Handle(AttachmentsWrapper<SendEmailRequest> payload)
     {
         await emailService.Send(payload);
     }

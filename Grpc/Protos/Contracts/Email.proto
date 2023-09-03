@@ -9,6 +9,7 @@ message GrpcSendEmailRequest {
   repeated string Recipients = 2;
   string Body = 3;
   string Subject = 4;
+  repeated GrpcAttachment Attachments = 5;
 }
 
 message GrpcSendTemplatedEmailRequest {
@@ -16,6 +17,7 @@ message GrpcSendTemplatedEmailRequest {
   repeated string Recipients = 2;
   string TemplateName = 3;
   string TemplateProperties = 4;
+  repeated GrpcAttachment Attachments = 5;
 }
 
 message GrpcEmailResponse {
