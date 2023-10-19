@@ -19,7 +19,7 @@
         <PackageReference Include="Castle.Core" Version="5.1.1" />
         <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
-        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.57.0" />
+        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.58.0" />
         <PackageReference Include="HtmlSanitizer" Version="8.0.718" />
         <PackageReference Include="Microsoft.AspNetCore.Grpc.Swagger" Version="0.3.11" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.11" />
