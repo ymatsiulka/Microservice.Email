@@ -1,6 +1,6 @@
 ﻿using Microservice.Email.Infrastructure.FileStorage.Contracts;
 using Microservice.Email.Infrastructure.FileStorage.Interfaces;
-using Minio;
+using Minio.DataModel.Args;
 using Minio.Exceptions;
 
 namespace Microservice.Email.Infrastructure.FileStorage;
