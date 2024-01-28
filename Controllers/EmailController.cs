@@ -2,7 +2,6 @@
 using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Contracts.Responses;
 using Microservice.Email.Core.Services.Interfaces;
-using Microservice.Email.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Microservice.Email.Controllers;
@@ -25,8 +24,7 @@ public sealed class EmailController : ControllerBase
     public async Task<IActionResult> Send(AttachmentsWrapper<SendEmailRequest> request)
     {
         var result = await emailService.Send(request);
-        var response = result.MatchActionResult(Ok);
-        return response;
+        return Ok(result);
     }
 
     [ProducesBadRequest]
@@ -35,8 +33,8 @@ public sealed class EmailController : ControllerBase
     public async Task<IActionResult> SendTemplatedEmail(AttachmentsWrapper<SendTemplatedEmailRequest> request)
     {
         var result = await emailService.SendTemplated(request);
-        var response = result.MatchActionResult(Ok);
-        return response;
+        return Ok(result);
+
     }
 
     [ProducesBadRequest]
@@ -45,8 +43,7 @@ public sealed class EmailController : ControllerBase
     public async Task<IActionResult> Send([FromForm] FormFilesWrapper<SendEmailRequest> request)
     {
         var result = await emailService.SendWithFormFiles(request);
-        var response = result.MatchActionResult(Ok);
-        return response;
+        return Ok(result);
     }
 
     [ProducesBadRequest]
@@ -55,7 +52,6 @@ public sealed class EmailController : ControllerBase
     public async Task<IActionResult> SendTemplatedEmail([FromForm] FormFilesWrapper<SendTemplatedEmailRequest> request)
     {
         var result = await emailService.SendTemplatedWithFormFiles(request);
-        var response = result.MatchActionResult(Ok);
-        return response;
+        return Ok(result);
     }
 }

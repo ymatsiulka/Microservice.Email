@@ -1,6 +1,4 @@
-﻿using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
-using ArchitectProg.Kernel.Extensions.Interfaces;
-using ArchitectProg.Kernel.Extensions.Utils;
+﻿using ArchitectProg.Kernel.Extensions.Interfaces;
 using FluentEmail.Core.Models;
 using Microservice.Email.Core.Contracts.Responses;
 using Microservice.Email.Core.Exceptions;
@@ -16,7 +14,6 @@ namespace Microservice.Email.Core.Services;
 public sealed class SendEmailService : ISendEmailService
 {
     private readonly IEmailSender emailSender;
-    private readonly IResultFactory resultFactory;
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
     private readonly IRepository<EmailEntity> emailRepository;
     private readonly IEmailMapper emailMapper;
@@ -25,7 +22,6 @@ public sealed class SendEmailService : ISendEmailService
 
     public SendEmailService(
         IEmailSender emailSender,
-        IResultFactory resultFactory,
         IUnitOfWorkFactory unitOfWorkFactory,
         IRepository<EmailEntity> emailRepository,
         IEmailEntityFactory emailEntityFactory,
@@ -33,7 +29,6 @@ public sealed class SendEmailService : ISendEmailService
         IEmailMapper emailMapper)
     {
         this.emailSender = emailSender;
-        this.resultFactory = resultFactory;
         this.unitOfWorkFactory = unitOfWorkFactory;
         this.emailRepository = emailRepository;
         this.emailEntityFactory = emailEntityFactory;
@@ -41,13 +36,13 @@ public sealed class SendEmailService : ISendEmailService
         this.emailMapper = emailMapper;
     }
 
-    public async Task<Result<EmailResponse>> Send(SendEmailArgs args)
+    public async Task<EmailResponse> Send(SendEmailArgs args)
     {
         var policy = retryPolicyFactory.GetPolicy<SendResponse>();
         var sendResponse = await policy.ExecuteAsync(async () => await emailSender.Send(args));
 
         if (!sendResponse.Successful)
-            return resultFactory.Failure<EmailResponse>(new EmailSendException(sendResponse.ErrorMessages));
+            throw new EmailSendException(sendResponse.ErrorMessages);
 
         var emailEntity = emailEntityFactory.Create(args);
         using (var transaction = unitOfWorkFactory.BeginTransaction())

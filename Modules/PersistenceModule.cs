@@ -10,10 +10,10 @@ public sealed class PersistenceModule : IModule
 {
     public void RegisterDependencies(WebApplicationBuilder builder)
     {
-        builder.Services.AddEfCoreRepository();
-        builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
-
         var configuration = builder.Configuration;
-        builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
+        var databaseSettingsConfigurationSection = configuration.GetSection(nameof(DatabaseSettings));
+
+        builder.Services.AddDatabase<ApplicationDatabaseContext>(databaseSettingsConfigurationSection); 
+        builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
     }
 }

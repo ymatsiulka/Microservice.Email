@@ -1,7 +1,5 @@
 ﻿using ArchitectProg.FunctionalExtensions.Extensions;
 using ArchitectProg.Kernel.Extensions.Exceptions;
-using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
-using ArchitectProg.Kernel.Extensions.Utils;
 using Microservice.Email.Core.Attributes;
 using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Contracts.Responses;
@@ -15,7 +13,6 @@ namespace Microservice.Email.Core.Services;
 
 public sealed class EmailService : IEmailService
 {
-    private readonly IResultFactory resultFactory;
     private readonly ISendEmailService sendEmailService;
     private readonly ISendEmailArgsFactory emailArgsFactory;
     private readonly IFileStorageService fileStorageService;
@@ -25,7 +22,6 @@ public sealed class EmailService : IEmailService
     private readonly ISendTemplatedEmailRequestValidator sendTemplatedEmailRequestValidator;
 
     public EmailService(
-        IResultFactory resultFactory,
         ISendEmailService sendEmailService,
         ISendEmailArgsFactory emailArgsFactory,
         IFileStorageService fileStorageService,
@@ -34,7 +30,6 @@ public sealed class EmailService : IEmailService
         ISendEmailRequestValidator sendEmailRequestValidator,
         ISendTemplatedEmailRequestValidator sendTemplatedEmailRequestValidator)
     {
-        this.resultFactory = resultFactory;
         this.sendEmailService = sendEmailService;
         this.emailArgsFactory = emailArgsFactory;
         this.fileStorageService = fileStorageService;
@@ -45,11 +40,11 @@ public sealed class EmailService : IEmailService
     }
 
     [CounterMetric("send_email", "Number of sent emails")]
-    public async Task<Result<EmailResponse>> Send(AttachmentsWrapper<SendEmailRequest> request)
+    public async Task<EmailResponse> Send(AttachmentsWrapper<SendEmailRequest> request)
     {
         var errors = sendEmailRequestValidator.Validate(request).ToArray();
         if (errors.Any())
-            return resultFactory.Failure<EmailResponse>(new ValidationException(errors));
+            throw new ValidationException(errors);
 
         var attachments = request.Attachments ?? Array.Empty<Attachment>();
         var loadedAttachments = await attachments.Select(x => fileStorageService.Download(x.FileName)).WhenAll();
@@ -61,11 +56,11 @@ public sealed class EmailService : IEmailService
     }
 
     [CounterMetric("send_templated_email", "Number of sent templated emails")]
-    public async Task<Result<EmailResponse>> SendTemplated(AttachmentsWrapper<SendTemplatedEmailRequest> request)
+    public async Task<EmailResponse> SendTemplated(AttachmentsWrapper<SendTemplatedEmailRequest> request)
     {
         var errors = sendTemplatedEmailRequestValidator.Validate(request).ToArray();
         if (errors.Any())
-            return resultFactory.Failure<EmailResponse>(new ValidationException(errors));
+            throw new ValidationException(errors);
 
         var content = await templateProcessingService.Process(request.Email);
 
@@ -79,11 +74,11 @@ public sealed class EmailService : IEmailService
     }
 
     [CounterMetric("send_email_with_form_files", "Number of sent emails with form files")]
-    public async Task<Result<EmailResponse>> SendWithFormFiles(FormFilesWrapper<SendEmailRequest> request)
+    public async Task<EmailResponse> SendWithFormFiles(FormFilesWrapper<SendEmailRequest> request)
     {
         var errors = sendEmailRequestValidator.Validate(request).ToArray();
         if (errors.Any())
-            return resultFactory.Failure<EmailResponse>(new ValidationException(errors));
+            throw new ValidationException(errors);
 
         var attachments = request.Attachments?.ToArray() ?? Array.Empty<IFormFile>();
         var attachmentsArgs = attachmentMapper.MapCollection(attachments).ToArray();
@@ -94,12 +89,12 @@ public sealed class EmailService : IEmailService
     }
 
     [CounterMetric("send_templated_email_with_form_files", "Number of sent templated emails with form files")]
-    public async Task<Result<EmailResponse>> SendTemplatedWithFormFiles(
+    public async Task<EmailResponse> SendTemplatedWithFormFiles(
         FormFilesWrapper<SendTemplatedEmailRequest> request)
     {
         var errors = sendTemplatedEmailRequestValidator.Validate(request).ToArray();
         if (errors.Any())
-            return resultFactory.Failure<EmailResponse>(new ValidationException(errors));
+            throw new ValidationException(errors);
 
         var content = await templateProcessingService.Process(request.Email);
         var attachments = request.Attachments?.ToArray() ?? Array.Empty<IFormFile>();

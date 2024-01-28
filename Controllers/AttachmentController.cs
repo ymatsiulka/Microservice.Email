@@ -1,6 +1,5 @@
 ﻿using ArchitectProg.WebApi.Extensions.Attributes;
 using Microservice.Email.Core.Services.Interfaces;
-using Microservice.Email.Extensions;
 using Microservice.Email.Infrastructure.FileStorage.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,8 +23,7 @@ public sealed class AttachmentController : ControllerBase
     public async Task<IActionResult> Upload([FromForm] IFormFileCollection files)
     {
         var result = await attachmentService.Upload(files);
-        var response = result.MatchActionResult(Ok);
-        return response;
+        return Ok(result);
     }
 
     [ProducesBadRequest]
@@ -34,8 +32,7 @@ public sealed class AttachmentController : ControllerBase
     public async Task<IActionResult> Info([FromQuery] string[] files)
     {
         var result = await attachmentService.Information(files);
-        var response = result.MatchActionResult(Ok);
-        return response;
+        return Ok(result);
     }
 
     [ProducesBadRequest]
@@ -44,8 +41,8 @@ public sealed class AttachmentController : ControllerBase
     public async Task<IActionResult> Download([FromQuery] string fileName)
     {
         var result = await attachmentService.Download(fileName);
-        var response = result.MatchActionResult(x => File(x.DownloadStream, x.ContentType, x.FileKey));
-        return response;
+        return File(result.DownloadStream, result.ContentType, result.FileKey);
+
     }
 
     [ProducesBadRequest]
@@ -54,7 +51,7 @@ public sealed class AttachmentController : ControllerBase
     public async Task<IActionResult> Remove([FromQuery] string[] files)
     {
         var result = await attachmentService.Remove(files);
-        var response = result.MatchActionResult(Ok);
-        return response;
+        return Ok(result);
+
     }
 }

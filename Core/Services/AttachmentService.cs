@@ -1,5 +1,4 @@
 ﻿using ArchitectProg.FunctionalExtensions.Extensions;
-using ArchitectProg.Kernel.Extensions.Utils;
 using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Infrastructure.FileStorage.Contracts;
 using Microservice.Email.Infrastructure.FileStorage.Interfaces;
@@ -15,7 +14,7 @@ public sealed class AttachmentService : IAttachmentService
         this.fileStorageService = fileStorageService;
     }
 
-    public async Task<Result<UploadResult[]>> Upload(IFormFileCollection files)
+    public async Task<UploadResult[]> Upload(IFormFileCollection files)
     {
         var result = await files
             .Select(x => fileStorageService.Upload(x.FileName, x.ContentType, x.OpenReadStream()))
@@ -24,7 +23,7 @@ public sealed class AttachmentService : IAttachmentService
         return result;
     }
 
-    public async Task<Result<InformationResult[]>> Information(string[] files)
+    public async Task<InformationResult[]> Information(string[] files)
     {
         var result = await files
             .Select(x => fileStorageService.Information(x))
@@ -33,13 +32,13 @@ public sealed class AttachmentService : IAttachmentService
         return result;
     }
 
-    public async Task<Result<DownloadResult>> Download(string fileName)
+    public async Task<DownloadResult> Download(string fileName)
     {
         var result = await fileStorageService.Download(fileName);
         return result;
     }
 
-    public async Task<Result<RemoveResult[]>> Remove(string[] files)
+    public async Task<RemoveResult[]> Remove(string[] files)
     {
         var result = await files
             .Select(x => fileStorageService.Remove(x))

@@ -34,7 +34,7 @@ public sealed class GrpcEmailService : EmailService.EmailServiceBase
     {
         var processedRequest = sendEmailRequestMapper.Map(request);
         var result = await emailService.Send(processedRequest);
-        var response = emailResponseMapper.Map(result.GetOrThrow());
+        var response = emailResponseMapper.Map(result);
         return response;
     }
 
@@ -44,7 +44,7 @@ public sealed class GrpcEmailService : EmailService.EmailServiceBase
     {
         var processedRequest = sendTemplatedEmailRequestMapper.Map(request);
         var result = await emailService.SendTemplated(processedRequest);
-        var response = emailResponseMapper.Map(result.GetOrThrow());
+        var response = emailResponseMapper.Map(result);
         return response;
     }
 }
