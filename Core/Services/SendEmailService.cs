@@ -16,6 +16,7 @@ public sealed class SendEmailService : ISendEmailService
     private readonly IEmailSender emailSender;
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
     private readonly IRepository<EmailEntity> emailRepository;
+    private readonly IRepository<RecipientEntity> recipientRepository;
     private readonly IEmailMapper emailMapper;
     private readonly IEmailEntityFactory emailEntityFactory;
     private readonly IRetryPolicyFactory retryPolicyFactory;
@@ -45,6 +46,7 @@ public sealed class SendEmailService : ISendEmailService
             throw new EmailSendException(sendResponse.ErrorMessages);
 
         var emailEntity = emailEntityFactory.Create(args);
+        emailEntity.Recipients = args.Recipients.Select(email => new RecipientEntity() { Email = email }).ToArray();
         using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
             await emailRepository.Add(emailEntity);

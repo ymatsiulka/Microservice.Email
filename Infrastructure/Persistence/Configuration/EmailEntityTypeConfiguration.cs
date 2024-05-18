@@ -1,5 +1,4 @@
 ﻿using Microservice.Email.Domain.Entities;
-using Microservice.Email.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,10 +8,13 @@ public sealed class EmailEntityTypeConfiguration : IEntityTypeConfiguration<Emai
 {
     public void Configure(EntityTypeBuilder<EmailEntity> builder)
     {
-        builder.ToTable("Email");
+        builder
+          .HasMany(e => e.Recipients)
+          .WithOne(e => e.EmailEntity)
+          .HasForeignKey(e => e.EmailId)
+          .IsRequired();
 
-        builder.Property(p => p.Recipients)
-            .HasMaxLength(8000)
-            .SetPropertyConverterAndComparer();
+
+        builder.ToTable("TEmail");
     }
 }

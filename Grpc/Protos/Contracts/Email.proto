@@ -23,7 +23,7 @@ message GrpcSendTemplatedEmailRequest {
 message GrpcEmailResponse {
   int32 Id = 1;
   GrpcSender Sender = 2;
-  repeated string Recipients = 3;
+  repeated GrpcRecipient Recipients = 3;
   google.protobuf.Timestamp SentDate = 4;
   GrpcEnumItem EmailStatus = 5;
 }

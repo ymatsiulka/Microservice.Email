@@ -27,7 +27,6 @@ public sealed class EmailEntityFactory : IEmailEntityFactory
         var result = new EmailEntity
         {
             EmailStatus = EmailStatus.Sent,
-            Recipients = args.Recipients,
             Subject = args.Subject,
             SenderName = args.Sender?.Name ?? defaultSender,
             SenderEmail = args.Sender?.Email ?? defaultSender,

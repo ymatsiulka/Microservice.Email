@@ -43,10 +43,10 @@ public sealed class EmailService : IEmailService
     public async Task<EmailResponse> Send(AttachmentsWrapper<SendEmailRequest> request)
     {
         var errors = sendEmailRequestValidator.Validate(request).ToArray();
-        if (errors.Any())
+        if (errors.Length != 0)
             throw new ValidationException(errors);
 
-        var attachments = request.Attachments ?? Array.Empty<Attachment>();
+        var attachments = request.Attachments ?? [];
         var loadedAttachments = await attachments.Select(x => fileStorageService.Download(x.FileName)).WhenAll();
         var attachmentsArgs = attachmentMapper.MapCollection(loadedAttachments).ToArray();
 
@@ -59,12 +59,12 @@ public sealed class EmailService : IEmailService
     public async Task<EmailResponse> SendTemplated(AttachmentsWrapper<SendTemplatedEmailRequest> request)
     {
         var errors = sendTemplatedEmailRequestValidator.Validate(request).ToArray();
-        if (errors.Any())
+        if (errors.Length != 0)
             throw new ValidationException(errors);
 
         var content = await templateProcessingService.Process(request.Email);
 
-        var attachments = request.Attachments ?? Array.Empty<Attachment>();
+        var attachments = request.Attachments ?? [];
         var loadedAttachments = await attachments.Select(x => fileStorageService.Download(x.FileName)).WhenAll();
         var attachmentsArgs = attachmentMapper.MapCollection(loadedAttachments).ToArray();
 
@@ -77,10 +77,10 @@ public sealed class EmailService : IEmailService
     public async Task<EmailResponse> SendWithFormFiles(FormFilesWrapper<SendEmailRequest> request)
     {
         var errors = sendEmailRequestValidator.Validate(request).ToArray();
-        if (errors.Any())
+        if (errors.Length != 0)
             throw new ValidationException(errors);
 
-        var attachments = request.Attachments?.ToArray() ?? Array.Empty<IFormFile>();
+        var attachments = request.Attachments?.ToArray() ?? [];
         var attachmentsArgs = attachmentMapper.MapCollection(attachments).ToArray();
 
         var args = emailArgsFactory.Create(request.Email, attachmentsArgs);
@@ -93,11 +93,11 @@ public sealed class EmailService : IEmailService
         FormFilesWrapper<SendTemplatedEmailRequest> request)
     {
         var errors = sendTemplatedEmailRequestValidator.Validate(request).ToArray();
-        if (errors.Any())
+        if (errors.Length != 0)
             throw new ValidationException(errors);
 
         var content = await templateProcessingService.Process(request.Email);
-        var attachments = request.Attachments?.ToArray() ?? Array.Empty<IFormFile>();
+        var attachments = request.Attachments?.ToArray() ?? [];
         var attachmentsArgs = attachmentMapper.MapCollection(attachments).ToArray();
 
         var args = emailArgsFactory.Create(request.Email, content, attachmentsArgs);

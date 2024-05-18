@@ -15,3 +15,8 @@ message GrpcEnumItem {
 message GrpcAttachment {
   string FileName = 1;
 }
+
+message GrpcRecipient {
+  int32 Id = 1;
+  string Email = 2;
+}

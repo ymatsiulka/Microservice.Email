@@ -27,11 +27,18 @@ public sealed class EmailMapper : IEmailMapper
         {
             Id = source.Id,
             EmailStatus = enumItemFactory.GetEnumItem(source.EmailStatus),
-            Recipients = source.Recipients,
+            Recipients = source.Recipients.Select(CreateRecipient).ToArray(),
             Sender = sender,
             SentDate = source.SentDate
         };
 
         return result;
     }
+
+    private static RecipientResponse CreateRecipient(RecipientEntity source) =>
+        new()
+        {
+            Id = source.Id,
+            Email = source.Email
+        };
 }

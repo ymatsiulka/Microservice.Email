@@ -23,10 +23,19 @@ public sealed class EmailResponseMapper : IEmailResponseMapper
                 Id = source.EmailStatus.Id,
                 Name = source.EmailStatus.Name
             },
-            Recipients = { source.Recipients },
             SentDate = source.SentDate.ToTimestamp()
         };
-
+        
+        var recipients = source.Recipients.Select(CreateRecipient).ToArray();
+        result.Recipients.AddRange(recipients);
+        
         return result;
     }
+
+    private static GrpcRecipient CreateRecipient(RecipientResponse source) =>
+    new()
+    {
+        Id = source.Id,
+        Email = source.Email
+    };
 }
