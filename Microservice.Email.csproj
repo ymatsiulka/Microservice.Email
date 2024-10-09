@@ -23,7 +23,7 @@
         <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.66.0" />
         <PackageReference Include="HtmlSanitizer" Version="8.1.870" />
         <PackageReference Include="Microsoft.AspNetCore.Grpc.Swagger" Version="0.8.8" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
         <PackageReference Include="Minio" Version="6.0.3" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Polly" Version="8.4.2" />
