@@ -17,13 +17,11 @@ public sealed class BusPublisher : IBusPublisher
         this.jsonSerializer = jsonSerializer;
     }
 
-    public Task Publish<T>(BusMessage<T> message)
+    public async Task Publish<T>(BusMessage<T> message)
     {
         var body = jsonSerializer.Serialize(message.Payload).ToBytes();
 
         var channel = channelFactory.Channel;
-        channel.BasicPublish(message.Exchange, string.Empty, body: body);
-
-        return Task.CompletedTask;
+        await channel.BasicPublishAsync(message.Exchange, string.Empty, body: body);
     }
 }

@@ -19,7 +19,7 @@ public sealed class QueueFactory : IQueueFactory
         this.exchangeFactory = exchangeFactory;
     }
 
-    public void CreateQueue(IModel channel, string exchange, QueueSettings queueSettings)
+    public async Task CreateQueueAsync(IChannel channel, string exchange, QueueSettings queueSettings)
     {
         if (queueSettings.Properties.AddDeadLetterExchange)
         {
@@ -29,11 +29,11 @@ public sealed class QueueFactory : IQueueFactory
                 Queues = new List<QueueSettings>()
             };
 
-            exchangeFactory.CreateExchange(channel, deadLetterExchangeSettings);
+            await exchangeFactory.CreateExchangeAsync(channel, deadLetterExchangeSettings);
         }
 
         var queueArgs = GetQueueArgs(exchange, queueSettings);
-        channel.QueueDeclare(queueSettings.Name, durable: true, exclusive: false, autoDelete: false, queueArgs);
+        await channel.QueueDeclareAsync(queueSettings.Name, durable: true, exclusive: false, autoDelete: false, queueArgs);
         logger.LogInformation("Queue declared. Name: {Name}", queueSettings.Name);
     }
 

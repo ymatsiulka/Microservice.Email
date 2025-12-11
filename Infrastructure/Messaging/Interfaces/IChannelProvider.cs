@@ -2,9 +2,9 @@
 
 namespace Microservice.Email.Infrastructure.Messaging.Interfaces;
 
-public interface IChannelProvider : IDisposable
+public interface IChannelProvider : IAsyncDisposable
 {
-    IModel Channel { get; }
+    IChannel Channel { get; }
 
-    IModel CreateChannel();
+    Task<IChannel> CreateChannelAsync();
 }

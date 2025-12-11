@@ -19,7 +19,7 @@ public sealed class HandlerFactory : IHandlerFactory
         this.logger = logger;
     }
 
-    public AsyncEventHandler<BasicDeliverEventArgs> CreateHandler(IModel channel, QueueSettings queueSettings)
+    public AsyncEventHandler<BasicDeliverEventArgs> CreateHandler(IChannel channel, QueueSettings queueSettings)
     {
         return async (_, args) =>
         {
@@ -35,7 +35,7 @@ public sealed class HandlerFactory : IHandlerFactory
                     }
 
                     await handler.Handle(args);
-                    channel.BasicAck(args.DeliveryTag, false);
+                    await channel.BasicAckAsync(args.DeliveryTag, false);
                 }
             }
             catch (Exception ex)
@@ -43,12 +43,12 @@ public sealed class HandlerFactory : IHandlerFactory
                 logger.LogError("Message: {Message}. StackTrace: {StackTrace}", ex.Message, ex.StackTrace);
                 var retriesCount = GetRetryCount(args.BasicProperties);
                 var queueRetries = queueSettings.Properties.RetriesCount;
-                channel.BasicReject(args.DeliveryTag, requeue: retriesCount < queueRetries);
+                await channel.BasicRejectAsync(args.DeliveryTag, requeue: retriesCount < queueRetries);
             }
         };
     }
 
-    private static int GetRetryCount(IBasicProperties messageProperties)
+    private static int GetRetryCount(IReadOnlyBasicProperties messageProperties)
     {
         var count = 0;
         var headers = messageProperties.Headers;

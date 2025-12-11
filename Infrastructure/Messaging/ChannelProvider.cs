@@ -8,62 +8,64 @@ namespace Microservice.Email.Infrastructure.Messaging;
 public sealed class ChannelProvider : IChannelProvider
 {
     private readonly MessagingSettings messagingSettings;
-    private readonly Lazy<IConnection> connection;
-    private readonly Lazy<IModel> channel;
-    private readonly List<IModel> channels = new();
+    private readonly List<IChannel> channels = [];
+    
+    private IConnection? connection;
+    private IChannel? channel;
 
-    public IModel Channel => channel.Value;
+    public IChannel Channel => channel ?? throw new InvalidOperationException("Channel not initialized.");
 
     public ChannelProvider(IOptions<MessagingSettings> messagingSettings)
     {
         this.messagingSettings = messagingSettings.Value;
-
-        connection = new Lazy<IConnection>(GetConnection, LazyThreadSafetyMode.ExecutionAndPublication);
-        channel = new Lazy<IModel>(CreateChannel, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    private IConnection GetConnection()
+    private async Task<IConnection> GetOrCreateConnectionAsync()
     {
+        if (connection is not null)
+            return connection;
+
         var connectionFactory = new ConnectionFactory
         {
             HostName = messagingSettings.Host,
             Port = messagingSettings.Port,
             UserName = messagingSettings.Username,
             Password = messagingSettings.Password,
-            DispatchConsumersAsync = true,
             VirtualHost = "/"
         };
 
-        var result = connectionFactory.CreateConnection();
-        return result;
+        connection = await connectionFactory.CreateConnectionAsync();
+        return connection;
     }
 
-    public IModel CreateChannel()
+    public async Task<IChannel> CreateChannelAsync()
     {
-        var result = connection.Value.CreateModel();
-        result.BasicQos(0, 1, false);
+        var conn = await GetOrCreateConnectionAsync();
+        var newChannel = await conn.CreateChannelAsync();
+        await newChannel.BasicQosAsync(0, 1, false);
 
-        channels.Add(result);
+        channels.Add(newChannel);
+        channel ??= newChannel;
 
-        return result;
+        return newChannel;
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
         foreach (var c in channels)
         {
             if (c.IsOpen)
-                c.Close();
+                await c.CloseAsync();
 
-            c.Dispose();
+            await c.DisposeAsync();
         }
 
-        if (connection.IsValueCreated)
+        if (connection is not null)
         {
-            if (connection.Value.IsOpen)
-                connection.Value.Close();
+            if (connection.IsOpen)
+                await connection.CloseAsync();
 
-            connection.Value.Dispose();
+            await connection.DisposeAsync();
         }
     }
 }

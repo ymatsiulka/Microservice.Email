@@ -1,5 +1,4 @@
 ﻿using ArchitectProg.FunctionalExtensions;
-using ArchitectProg.Kernel.Extensions;
 using Microservice.Email.Core.Factories;
 using Microservice.Email.Core.Factories.Interfaces;
 using Microservice.Email.Core.Interceptors.Metrics;
@@ -38,7 +37,6 @@ public sealed class CoreModule : IModule
         builder.Services.AddScoped<IEmailEntityFactory, EmailEntityFactory>();
         builder.Services.AddScoped<IAddressFactory, AddressFactory>();
 
-        builder.Services.AddKernelExtensions();
         builder.Services.AddFunctionalExtensions();
         
         builder.Services.AddInterceptedScoped<IEmailService, EmailService, CounterMetricInterceptor>();

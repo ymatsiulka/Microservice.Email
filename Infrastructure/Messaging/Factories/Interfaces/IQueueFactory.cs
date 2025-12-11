@@ -5,5 +5,5 @@ namespace Microservice.Email.Infrastructure.Messaging.Factories.Interfaces;
 
 public interface IQueueFactory
 {
-    void CreateQueue(IModel channel, string exchange, QueueSettings queueSettings);
+    Task CreateQueueAsync(IChannel channel, string exchange, QueueSettings queueSettings);
 }

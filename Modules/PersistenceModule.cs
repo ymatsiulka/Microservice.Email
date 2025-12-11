@@ -1,8 +1,8 @@
-﻿using ArchitectProg.Persistence.EfCore.PostgreSQL;
-using ArchitectProg.Persistence.EfCore.PostgreSQL.Settings;
-using Microservice.Email.Infrastructure.Persistence;
+﻿using Microservice.Email.Infrastructure.Persistence;
 using Microservice.Email.Modules.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Yurutaru.Platform.NetCore.Persistence.EfCore.PostgreSQL;
+using Yurutaru.Platform.NetCore.Persistence.EfCore.PostgreSQL.Settings;
 
 namespace Microservice.Email.Modules;
 

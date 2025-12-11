@@ -1,4 +1,4 @@
-﻿using ArchitectProg.Kernel.Extensions.Exceptions;
+﻿using Yurutaru.Platform.NetCore.Core.Exceptions;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Microservice.Email.Extensions;

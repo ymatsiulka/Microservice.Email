@@ -1,5 +1,4 @@
 ﻿using ArchitectProg.FunctionalExtensions.Extensions;
-using ArchitectProg.Kernel.Extensions.Exceptions;
 using Microservice.Email.Core.Attributes;
 using Microservice.Email.Core.Contracts.Requests;
 using Microservice.Email.Core.Contracts.Responses;
@@ -8,6 +7,7 @@ using Microservice.Email.Core.Mappers.Interfaces;
 using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Core.Validators.Interfaces;
 using Microservice.Email.Infrastructure.FileStorage.Interfaces;
+using Yurutaru.Platform.NetCore.Core.Exceptions;
 
 namespace Microservice.Email.Core.Services;
 

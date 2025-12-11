@@ -35,46 +35,44 @@ public sealed class RabbitMQBusInitializer : IHostedService, IDisposable
         serviceScope = serviceScopeFactory.CreateScope();
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
         var services = serviceScope.ServiceProvider;
         var channelProvider = services.GetRequiredService<IChannelProvider>();
 
-        var channel = channelProvider.Channel;
+        var channel = await channelProvider.CreateChannelAsync();
         var exchangeSettings = busSettings.Exchanges;
 
         foreach (var exchange in exchangeSettings)
         {
-            exchangeFactory.CreateExchange(channel, exchange);
+            await exchangeFactory.CreateExchangeAsync(channel, exchange);
 
             foreach (var queue in exchange.Queues)
             {
-                queueFactory.CreateQueue(channel, exchange.Name, queue);
-                channel.QueueBind(queue.Name, exchange.Name, queue.Name);
+                await queueFactory.CreateQueueAsync(channel, exchange.Name, queue);
+                await channel.QueueBindAsync(queue.Name, exchange.Name, queue.Name);
 
                 for (var i = 0; i < queue.Properties.ConsumersCount; i++)
                 {
                     var handler = handlerFactory.CreateHandler(channel, queue);
 
                     var consumer = new Consumer(channel);
-                    consumer.Received += handler;
+                    consumer.ReceivedAsync += handler;
 
                     handlers.Add(consumer, handler);
-                    channel.BasicConsume(queue.Name, autoAck: false, consumer: consumer);
-                    channel = channelProvider.CreateChannel();
+                    await channel.BasicConsumeAsync(queue.Name, autoAck: false, consumer: consumer);
+                    channel = await channelProvider.CreateChannelAsync();
                 }
 
                 logger.LogInformation("Handler of type: {HandlerType} attached to queue", queue.HandlerType);
             }
         }
-
-        return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
         foreach (var (consumer, handler) in handlers)
-            consumer.Received -= handler;
+            consumer.ReceivedAsync -= handler;
 
         return Task.CompletedTask;
     }

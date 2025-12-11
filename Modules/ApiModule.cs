@@ -1,10 +1,10 @@
-﻿using ArchitectProg.Kernel.Extensions.Exceptions;
-using ArchitectProg.WebApi.Extensions.Filters;
+﻿using ArchitectProg.WebApi.Extensions.Filters;
 using ArchitectProg.WebApi.Extensions.Responses;
 using Microservice.Email.Modules.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Minio.Exceptions;
+using Yurutaru.Platform.NetCore.Core.Exceptions;
 
 namespace Microservice.Email.Modules;
 

@@ -13,9 +13,9 @@ public sealed class ExchangeFactory : IExchangeFactory
         this.logger = logger;
     }
 
-    public void CreateExchange(IModel channel, ExchangeSettings exchangeSettings)
+    public async Task CreateExchangeAsync(IChannel channel, ExchangeSettings exchangeSettings)
     {
-        channel.ExchangeDeclare(exchangeSettings.Name, ExchangeType.Fanout);
+        await channel.ExchangeDeclareAsync(exchangeSettings.Name, ExchangeType.Fanout);
         logger.LogInformation("Exchange declared. Name: {Name}", exchangeSettings.Name);
     }
 }

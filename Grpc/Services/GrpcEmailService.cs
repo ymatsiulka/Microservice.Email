@@ -2,7 +2,6 @@
 using Grpc.Core;
 using Grpc.Services;
 using Microservice.Email.Core.Services.Interfaces;
-using Microservice.Email.Extensions;
 using Microservice.Email.Grpc.Mappers.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

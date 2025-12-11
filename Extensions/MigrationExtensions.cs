@@ -1,4 +1,4 @@
-﻿using ArchitectProg.Persistence.EfCore.PostgreSQL.Services.Interfaces;
+﻿using Yurutaru.Platform.NetCore.Persistence.EfCore.PostgreSQL.Services.Interfaces;
 
 namespace Microservice.Email.Extensions;
 

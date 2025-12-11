@@ -1,5 +1,4 @@
-﻿using ArchitectProg.Kernel.Extensions.Interfaces;
-using FluentEmail.Core.Models;
+﻿using FluentEmail.Core.Models;
 using Microservice.Email.Core.Contracts.Responses;
 using Microservice.Email.Core.Exceptions;
 using Microservice.Email.Core.Factories.Interfaces;
@@ -8,6 +7,8 @@ using Microservice.Email.Core.Services.Interfaces;
 using Microservice.Email.Domain.Entities;
 using Microservice.Email.Infrastructure.Smtp.Contracts;
 using Microservice.Email.Infrastructure.Smtp.Interfaces;
+using Yurutaru.Platform.NetCore.Persistence.EfCore.PostgreSQL.Repositories.Interfaces;
+using Yurutaru.Platform.NetCore.Persistence.EfCore.PostgreSQL.UoW.Interfaces;
 
 namespace Microservice.Email.Core.Services;
 
@@ -16,7 +17,6 @@ public sealed class SendEmailService : ISendEmailService
     private readonly IEmailSender emailSender;
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
     private readonly IRepository<EmailEntity> emailRepository;
-    private readonly IRepository<RecipientEntity> recipientRepository;
     private readonly IEmailMapper emailMapper;
     private readonly IEmailEntityFactory emailEntityFactory;
     private readonly IRetryPolicyFactory retryPolicyFactory;

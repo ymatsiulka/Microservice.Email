@@ -1,6 +1,5 @@
-﻿using ArchitectProg.Kernel.Extensions.Entities;
-using Microservice.Email.Domain.Enums;
-using Microsoft.Extensions.Hosting;
+﻿using Microservice.Email.Domain.Enums;
+using Yurutaru.Platform.NetCore.Persistence.EfCore.PostgreSQL.Entities;
 
 namespace Microservice.Email.Domain.Entities;
 

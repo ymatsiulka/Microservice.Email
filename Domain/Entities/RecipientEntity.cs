@@ -1,4 +1,4 @@
-﻿using ArchitectProg.Kernel.Extensions.Entities;
+﻿using Yurutaru.Platform.NetCore.Persistence.EfCore.PostgreSQL.Entities;
 
 namespace Microservice.Email.Domain.Entities;
 

@@ -1,6 +1,6 @@
-﻿using ArchitectProg.Kernel.Extensions.Mappers;
-using Grpc.Contracts.Email;
+﻿using Grpc.Contracts.Email;
 using Microservice.Email.Core.Contracts.Responses;
+using Yurutaru.Platform.NetCore.Core.Mappers.Interfaces;
 
 namespace Microservice.Email.Grpc.Mappers.Interfaces;
 

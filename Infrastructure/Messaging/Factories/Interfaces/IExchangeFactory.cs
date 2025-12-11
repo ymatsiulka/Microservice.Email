@@ -5,5 +5,5 @@ namespace Microservice.Email.Infrastructure.Messaging.Factories.Interfaces;
 
 public interface IExchangeFactory
 {
-    void CreateExchange(IModel channel, ExchangeSettings exchangeSettings);
+    Task CreateExchangeAsync(IChannel channel, ExchangeSettings exchangeSettings);
 }
